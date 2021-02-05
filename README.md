@@ -1,13 +1,11 @@
 #
 - ### 在diy-3.sh里面需要修改的东西
 ```
-Diy_Core() {
 Author="281677160"       你的帐号
 Default_Device="x86-64"          机型名字，看下面说明
 Updete_firmware="openwrt-x86-64-combined-squashfs.img.gz"  安装固件名字,一定要正确填写,源码不一样名字不一样
 Extension=".img.gz"              安装固件的扩展（后缀），一定要正确填写
 Source="lede"               源码作者名字，随便写，用来区分源码的
-}
 
 #
 ```
