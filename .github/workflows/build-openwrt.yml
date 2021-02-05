@@ -208,7 +208,6 @@ jobs:
          [ -s NAME1 ] && echo "NAME1=$(cat NAME1)" >> $GITHUB_ENV
         fi
         if [ -n "$(ls -A "build/${{matrix.target}}/diy-3.sh" 2>/dev/null)" ]; then
-          mkdir -p bin/Firmware
           source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part2
         fi
         )
