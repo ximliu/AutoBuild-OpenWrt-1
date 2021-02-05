@@ -6,9 +6,9 @@
 Diy_Core() {
 	Author="281677160"
 	Default_Device="x86-64"
-	Updete_firmware="combined.img.gz"
+	Updete_firmware="openwrt-x86-64-combined-squashfs.img.gz"
 	Extension=".img.gz"
-	Source="lede"
+	Source="lienol"
 }
 
 
