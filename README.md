@@ -17,10 +17,11 @@ Source="lede"               源码作者名字，随便写，用来区分源码�
 CONFIG_TARGET_rockchip=y
 CONFIG_TARGET_rockchip_armv8=y
 CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
-```
+
 - 上面的就是机型文件的三项，第三行的DEVICE_跟着的就是机型名字，后面的=y不要，就是friendlyarm_nanopi-r2s
 - 就我知道没有明确机型名字的有X86跟N1，x86的填写x86-64或者x86-32根据你编译的填写
 - N1的如果有测试，我需要另外的做一份文件
+```
 #
 ---
 
@@ -29,9 +30,8 @@ CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
 CONFIG_PACKAGE_luci-app-autoupdate=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 CONFIG_TARGET_IMAGES_GZIP=y
-```
+
 #
-```
 CONFIG_PACKAGE_luci-app-autoupdate=y    定时更新插件
 CONFIG_PACKAGE_luci-app-ttyd=y        openwrt内置SSH命令窗
 CONFIG_TARGET_IMAGES_GZIP=y         把img压缩成img.gz的，X86一定需要，其他不是.img.gz后缀的机型不需要
