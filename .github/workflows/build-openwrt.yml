@@ -163,17 +163,6 @@ jobs:
         pushd po2lmo
         make && sudo make install
         popd
- 
-    - name: 把定时更新需要的插件自动写入你在.config配置,免除SSH之苦
-      run: |
-        cd openwrt
-        cat >.config <<-EOF
-        CONFIG_PACKAGE_luci-app-autoupdate=y
-        CONFIG_PACKAGE_luci-app-ttyd=y
-        CONFIG_TARGET_IMAGES_GZIP=y
-        EOF
-        
-        cat .config
     
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
