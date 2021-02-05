@@ -1,5 +1,7 @@
 #
 ### 在diy-3.sh里面需要修改的东西
+```yaml
+
 Diy_Core() {
 	Author="281677160"       作者仓库
 	Default_Device="x86-64"          机型名字，x86的就写x86-64的
@@ -20,3 +22,14 @@ CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
 - N1的如果有测试，我需要另外的做一份文件
 #
 ---
+- 如果不想开SSH链接选择插件的话，就把下面三项按需放入你的.config里面就可以了
+CONFIG_PACKAGE_luci-app-autoupdate=y
+CONFIG_PACKAGE_luci-app-ttyd=y
+CONFIG_TARGET_IMAGES_GZIP=y
+
+#
+CONFIG_PACKAGE_luci-app-autoupdate=y    定时更新插件
+CONFIG_PACKAGE_luci-app-ttyd=y        openwrt内置SSH命令窗
+CONFIG_TARGET_IMAGES_GZIP=y         把img压缩成img.gz的，X86一定需要，其他不是.img.gz后缀的机型不需要
+
+```
