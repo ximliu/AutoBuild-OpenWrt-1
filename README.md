@@ -4,7 +4,7 @@
 Diy_Core() {
 Author="281677160"       作者仓库
 Default_Device="x86-64"          机型名字，x86的就写x86-64的
-Updete_firmware="openwrt-x86-64-combined-squashfs.img.gz"  安装使用的固件名字，一定要正确填写，x86几个源码的名字都不一样的，其他机型也一样要注意
+Updete_firmware="openwrt-x86-64-combined-squashfs.img.gz"  安装使用的固件名字，一定要正确填写,源码不一样名字不一样
 Extension=".img.gz"              安装使用固件的扩展（后缀），一定要正确填写
 Source="lede"               源码作者名字，随便写，用来区分源码的
 }
@@ -31,7 +31,8 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 CONFIG_TARGET_IMAGES_GZIP=y
 ```
 #
+```
 CONFIG_PACKAGE_luci-app-autoupdate=y    定时更新插件
 CONFIG_PACKAGE_luci-app-ttyd=y        openwrt内置SSH命令窗
 CONFIG_TARGET_IMAGES_GZIP=y         把img压缩成img.gz的，X86一定需要，其他不是.img.gz后缀的机型不需要
-
+```
