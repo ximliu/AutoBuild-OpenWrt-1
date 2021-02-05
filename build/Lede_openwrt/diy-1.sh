@@ -8,7 +8,14 @@
 # 软件包地址：https://github.com/281677160/openwrt-package
 # 拉取插件请看《各种命令的简单介绍》第4条、第5条说明,不管大神还是新手请认真的看看,再次强调请不要一下子就拉取别人一堆插件的插件包,容易造成编译错误的
 
+
 git clone https://github.com/fw876/helloworld package/luci-app-ssr-plus
 git clone https://github.com/vernesong/OpenClash package/luci-app-openclash
 git clone https://github.com/jerrykuku/luci-app-vssr package/luci-app-vssr
 git clone https://github.com/xiaorouji/openwrt-passwall package/luci-app-passwall
+git clone https://github.com/garypang13/luci-app-bypass package/luci-app-bypass
+svn co https://github.com/garypang13/openwrt-packages/trunk/smartdns
+svn co https://github.com/garypang13/openwrt-packages/trunk/tcping
+svn co https://github.com/garypang13/openwrt-packages/trunk/lua-maxminddb
+find package/*/ feeds/*/ -maxdepth 2 -path "*luci-app-bypass/Makefile" | xargs -i sed -i 's/shadowsocksr-libev-ssr-redir/shadowsocksr-libev-alt/g' {}
+find package/*/ feeds/*/ -maxdepth 2 -path "*luci-app-bypass/Makefile" | xargs -i sed -i 's/shadowsocksr-libev-ssr-server/shadowsocksr-libev-server/g' {}
