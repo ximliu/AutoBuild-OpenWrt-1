@@ -1,5 +1,5 @@
 #
-### 在diy-3.sh里面需要修改的东西
+- ### 在diy-3.sh里面需要修改的东西
 ```
 Diy_Core() {
 Author="281677160"       作者仓库
@@ -25,7 +25,7 @@ CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
 #
 ---
 
-- 如果不想开SSH链接选择插件的话，就把下面三项按需放入你的.config里面就可以了
+- ### 如果不想开SSH链接选择插件的话，就把下面三项按需放入你的.config里面就可以了
 ```
 CONFIG_PACKAGE_luci-app-autoupdate=y
 CONFIG_PACKAGE_luci-app-ttyd=y
