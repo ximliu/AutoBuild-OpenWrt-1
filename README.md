@@ -7,8 +7,8 @@ Updete_firmware="openwrt-x86-64-combined-squashfs.img.gz"  安装固件名字,�
 Extension=".img.gz"              安装固件的扩展（后缀），一定要正确填写
 Source="lede"               源码作者名字，随便写，用来区分源码的
 
-#
 ```
+#
 ---
 - 机型名字可以看.config的第三行
 ```
