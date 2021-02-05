@@ -8,7 +8,7 @@ Extension=".img.gz"              安装固件的扩展（后缀），一定要�
 Source="lede"               源码作者名字，随便写，用来区分源码的
 
 ```
-#
+
 ---
 - 机型名字可以看.config的第三行
 ```
@@ -20,7 +20,7 @@ CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
 - 就我知道没有明确机型名字的有X86跟N1，x86的填写x86-64或者x86-32根据你编译的填写
 - N1的如果有测试，我需要另外的做一份文件
 ```
-#
+
 ---
 
 - ### 如果不想开SSH链接选择插件的话，就把下面三项按需放入你的.config里面就可以了
