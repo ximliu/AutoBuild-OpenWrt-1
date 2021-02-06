@@ -51,3 +51,13 @@ CONFIG_TARGET_IMAGES_GZIP=y         把img压缩成img.gz的，X86一定需要�
 ---
 - ### 定时更新设置:
 - 首先需要打开 Openwrt 主页,点击系统-定时更新 ，定时更新勾选上，设置好时间，保存设置就可以了
+
+
+---
+## 鸣谢
+
+   - [Hyy2001X](https://github.com/Hyy2001X/AutoBuild-Actions)
+
+   - [dhxh](https://github.com/dhxh/Openwrt-Build)
+
+   定时更新脚本是由[dhxh](https://github.com/dhxh/Openwrt-Build)从[Hyy2001X](https://github.com/Hyy2001X/AutoBuild-Actions)基础修改完成
