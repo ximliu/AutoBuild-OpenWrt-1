@@ -183,6 +183,8 @@ jobs:
         if [ -n "$(ls -A "build/${{matrix.target}}/diy-3.sh" 2>/dev/null)" ]; then
           chmod +x build/${{matrix.target}}/diy-3.sh
           source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part1
+          echo "logs=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+          echo "log=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
         )
     
@@ -322,7 +324,7 @@ jobs:
       with:
         name: update_Firmware
         tag_name: update_Firmware
-        body: ${{ env.date2 }}
+        body: ${{ env.log }}-${{ env.logs }}
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
