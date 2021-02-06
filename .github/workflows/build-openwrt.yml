@@ -318,7 +318,6 @@ jobs:
     
     - name: 自动发布固件
       uses: softprops/action-gh-release@v1
-      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' || (github.event.inputs.release == 'release' && github.event.inputs.release  != 'false')
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
