@@ -60,4 +60,4 @@ CONFIG_TARGET_IMAGES_GZIP=y         把img压缩成img.gz的，X86一定需要�
 
    - [dhxh](https://github.com/dhxh/Openwrt-Build)
 
-   定时更新脚本是由[dhxh](https://github.com/dhxh/Openwrt-Build)从[Hyy2001X](https://github.com/Hyy2001X/AutoBuild-Actions)基础修改完成
+   - 定时更新脚本是由[dhxh](https://github.com/dhxh/Openwrt-Build)从[Hyy2001X](https://github.com/Hyy2001X/AutoBuild-Actions)基础修改完成
