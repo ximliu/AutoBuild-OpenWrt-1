@@ -35,3 +35,16 @@ CONFIG_PACKAGE_luci-app-autoupdate=y    定时更新插件
 CONFIG_PACKAGE_luci-app-ttyd=y        openwrt内置SSH命令窗
 CONFIG_TARGET_IMAGES_GZIP=y         把img压缩成img.gz的，X86一定需要，其他不是.img.gz后缀的机型不需要
 ```
+---
+使用一键更新固件脚本:
+```
+首先需要打开 Openwrt 主页,点击系统-TTYD 终端或命令窗,按需输入下方指令:
+
+检查更新(保留配置): bash /bin/AutoUpdate.sh
+
+检查更新(不保留配置): bash /bin/AutoUpdate.sh -n
+
+
+使用一键扩展内部空间\挂载 Samba 共享脚本:
+同上方操作,打开TTYD 终端或命令窗,输入bash /bin/AutoBuild_Tools.sh
+```
