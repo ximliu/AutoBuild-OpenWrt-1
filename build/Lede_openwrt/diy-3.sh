@@ -5,8 +5,8 @@
 
 Diy_Core() {
 	Author="281677160"
-	Default_Device="x86-64"
-	Updete_firmware="combined.img.gz"
+	Default_Device="friendlyarm_nanopi-r2s"
+	Updete_firmware="squashfs-sysupgrade.img.gz"
 	Extension=".img.gz"
 	Source="lede"
 }
