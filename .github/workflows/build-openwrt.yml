@@ -175,8 +175,9 @@ jobs:
         if [ "${REGULAR_UPDATE}" == "true" ]; then
         chmod +x build/${{matrix.target}}/diy-3.sh
         source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part1
-        echo "logs=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-        echo "log=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
         )
     
@@ -315,7 +316,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         tag_name: update_Firmware
-        body: ${{ env.log }}-${{ env.logs }}
+        body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
