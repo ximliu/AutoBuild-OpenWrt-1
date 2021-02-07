@@ -43,19 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lede_openwrt]
-
-     # [Lede_x86_64,Lede_gl_mt300n_v2,Lede_nanopi_r2s,Lede_nanopi_r4s,Lede_newifi_d2,p2w_r619ac_128m,Lede_phicomm_k2p,Lede_phicomm_n1,Lede_redmi_ac2100,Lede_wankeyun,Lede_wndr3800,Lede_wndr4300_v1,Lede_wr703n_v1,Lede_xiaomi_r3pro,Lede_xiaoyu_c5,Lede_Raspberry_Pi4]
-     
-     # [Lienol_phicomm_k2p,Lienol_phicomm_k3,Lienol_x86_64]
-     
-     # [Project_x86_64,Project_nanopi_r2s,Project_nanopi_r4s,Project_newifi_d2,Project_phicomm_k3,Project_phicomm_n1,Project_xiaomi_ac2100,Project_xiaomi_mir3g,Project_xiaoyu_c5]
-     
-     # [openwrt] 
-     
-     # 除了编译【openwrt】机型外，其他机型都直接打入了常用插件了，不需要自己再拉取插件，除非我的插件包跟源码自带的都没有，你就自己添加吧，说明的《各种命令的简单介绍》有教程。
-     # 选择编译【openwrt】纯天然不经任何修改的，增加插件可以在diy-1.sh增加，也可在settings.ini里修改成你想要编译的源码跟分支。
-     # 选择【Lede_phicomm_n1或Project_phicomm_n1】的机型文件夹编译的话，会自动编译出（ N1、微加云、贝壳云、我家云、S9xxx ）固件。
+        target: [Lede_openwrt,Lienol_openwrt,Project_openwrt]
 
     steps:
     - name: 准备结束
@@ -77,6 +65,7 @@ jobs:
         echo "UPLOAD_COWTRANSFER=${UPLOAD_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
         echo "SERVERCHAN_SCKEY=${SERVERCHAN_SCKEY}" >> $GITHUB_ENV
+        echo "REGULAR_UPDATE=${REGULAR_UPDATE}" >> $GITHUB_ENV
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
@@ -108,7 +97,6 @@ jobs:
         cd openwrt
         if [ "${{matrix.target}}" != "openwrt" ]; then
           rm -rf package/lienol/luci-app-timecontrol
-          rm -rf package/ntlf9t/{smartdns,luci-app-smartdns}
           rm -rf package/ctcgfw/{luci-app-argon-config,luci-theme-argonv3}
           rm -rf package/lean/{luci-app-netdata,luci-theme-argon,k3screenctrl}
         fi
@@ -146,13 +134,13 @@ jobs:
         fi
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
         echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-        if [ $REPO_URL == "https://github.com/coolsnowwolf/lede" ]; then
+        if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
          echo "NAME2=Lede-" >> $GITHUB_ENV
          echo "ZUOZHE=lean" >> $GITHUB_ENV
-        elif [ $REPO_URL == "https://github.com/Lienol/openwrt" ]; then
+        elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
          echo "NAME2=Lienol-" >> $GITHUB_ENV
          echo "ZUOZHE=lienol" >> $GITHUB_ENV
-        elif [ $REPO_URL == "https://github.com/project-openwrt/openwrt" ]; then
+        elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
          echo "NAME2=Project-" >> $GITHUB_ENV
          echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
@@ -180,11 +168,11 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         (
-        if [ -n "$(ls -A "build/${{matrix.target}}/diy-3.sh" 2>/dev/null)" ]; then
-          chmod +x build/${{matrix.target}}/diy-3.sh
-          source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part1
-          echo "logs=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-          echo "log=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        if [ "${REGULAR_UPDATE}" == "true" ]; then
+        chmod +x build/${{matrix.target}}/diy-3.sh
+        source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part1
+        echo "logs=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        echo "log=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
         )
     
@@ -209,8 +197,8 @@ jobs:
          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > NAME1
          [ -s NAME1 ] && echo "NAME1=$(cat NAME1)" >> $GITHUB_ENV
         fi
-        if [ -n "$(ls -A "build/${{matrix.target}}/diy-3.sh" 2>/dev/null)" ]; then
-          source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part2
+        if [ "${REGULAR_UPDATE}" == "true" ]; then
+        source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part2
         fi
         )
     
@@ -218,7 +206,7 @@ jobs:
       uses: actions/upload-artifact@v2
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: OpenWrt-bin-${{ env.NAME2 }}${{ env.NAME1 }}_${{ env.date }}
+        name: OpenWrt_bin_${{ env.NAME2 }}${{ env.NAME1 }}_${{ env.date }}
         path: openwrt/bin
 
     - name: 编译N1机型时,打包（N1、微加云、贝壳云、我家云、S9xxx）固件
@@ -316,12 +304,12 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
     
-    - name: 自动发布固件
+    - name: 定时自动更新固件云端地址
       uses: softprops/action-gh-release@v1
+      if: steps.compile.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        name: update_Firmware
         tag_name: update_Firmware
         body: ${{ env.log }}-${{ env.logs }}
         files: openwrt/bin/Firmware/*
