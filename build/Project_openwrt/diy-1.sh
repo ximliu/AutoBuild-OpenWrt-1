@@ -13,5 +13,3 @@ git clone https://github.com/garypang13/luci-app-bypass package/luci-app-bypass
 svn co https://github.com/garypang13/openwrt-packages/trunk/smartdns
 svn co https://github.com/garypang13/openwrt-packages/trunk/tcping
 svn co https://github.com/garypang13/openwrt-packages/trunk/lua-maxminddb
-find package/*/ feeds/*/ -maxdepth 2 -path "*luci-app-bypass/Makefile" | xargs -i sed -i 's/shadowsocksr-libev-ssr-redir/shadowsocksr-libev-alt/g' {}
-find package/*/ feeds/*/ -maxdepth 2 -path "*luci-app-bypass/Makefile" | xargs -i sed -i 's/shadowsocksr-libev-ssr-server/shadowsocksr-libev-server/g' {}
