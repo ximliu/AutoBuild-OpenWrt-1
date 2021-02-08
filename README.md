@@ -38,7 +38,8 @@ IMAGES_GZIP=y         把img压缩成img.gz的
 
 sed -i '/IMAGES_GZIP/d' .config > /dev/null 2>&1
 echo -e "\nCONFIG_TARGET_IMAGES_GZIP=y" >> .config
-这两行代码，删除了就可以了
+
+以上这两行代码，删除了就可以了
 
 ```
 ---
