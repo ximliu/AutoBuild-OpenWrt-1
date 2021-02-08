@@ -15,7 +15,6 @@ Diy_Core() {
 GET_TARGET_INFO() {
 	Diy_Core
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
-	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
 	Openwrt_Version="${Compile_Date}"
 	DEVICE=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)
         SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
@@ -29,8 +28,20 @@ GET_TARGET_INFO() {
 }
 
 Diy_Part1() {
+	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_PACKAGE_luci-app-autoupdate=y" >> .config
+	sed -i '/luci-app-ttyd/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_PACKAGE_luci-app-ttyd=y" >> .config
+	sed -i '/IMAGES_GZIP/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_TARGET_IMAGES_GZIP=y" >> .config
+}
+
+Diy_Part2() {
 	Diy_Core
 	GET_TARGET_INFO
+	AutoUpdate_Version="$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')"
+	[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
+	echo "AutoUpdate Version: ${AutoUpdate_Version}"
 	[[ -z "${Author}" ]] && Author="Unknown"
 	echo "Author: ${Author}"
 	echo "Openwrt Version: ${Openwrt_Version}"
@@ -43,7 +54,7 @@ Diy_Part1() {
 	echo "${Source}" >> package/base-files/files/etc/openwrt_info
 }
 
-Diy_Part2() {
+Diy_Part3() {
 	Diy_Core
 	GET_TARGET_INFO
 	Default_Firmware="${Updete_firmware}"
