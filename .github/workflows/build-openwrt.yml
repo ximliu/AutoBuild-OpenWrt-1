@@ -137,7 +137,11 @@ jobs:
          cp -Rf build/${{matrix.target}}/diy/* ./
         fi
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
-        echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
+        if [ "${REGULAR_UPDATE}" == "true" ]; then
+          chmod +x build/${{matrix.target}}/diy-3.sh
+          echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
+          source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part1
+        fi
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
          echo "NAME2=Lede-" >> $GITHUB_ENV
          echo "ZUOZHE=lean" >> $GITHUB_ENV
@@ -173,8 +177,7 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         (
         if [ "${REGULAR_UPDATE}" == "true" ]; then
-        chmod +x build/${{matrix.target}}/diy-3.sh
-        source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part1
+        source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part2
         echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
@@ -203,7 +206,7 @@ jobs:
          [ -s NAME1 ] && echo "NAME1=$(cat NAME1)" >> $GITHUB_ENV
         fi
         if [ "${REGULAR_UPDATE}" == "true" ]; then
-        source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part2
+        source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part3
         fi
         )
     
