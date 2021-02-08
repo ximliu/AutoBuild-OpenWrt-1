@@ -312,7 +312,7 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
     
-    - name: 定时升级云端地址
+    - name: 发布定时升级云端地址
       uses: softprops/action-gh-release@v1
       if: steps.compile.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       env:
