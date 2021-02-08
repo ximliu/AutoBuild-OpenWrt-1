@@ -26,16 +26,20 @@ CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
 
 ---
 
-- ### 如果不想开SSH链接选择插件的话，就把下面三项按需放入你的.config里面就可以了
+- ### 自动在你现有的.config配置增加以下三个插件，免除SSH进去选择
 ```
-CONFIG_PACKAGE_luci-app-autoupdate=y
-CONFIG_PACKAGE_luci-app-ttyd=y
-CONFIG_TARGET_IMAGES_GZIP=y
+luci-app-autoupdate=y    定时更新插件
+luci-app-ttyd=y        openwrt内置SSH命令窗
+IMAGES_GZIP=y         把img压缩成img.gz的
 
 #
-CONFIG_PACKAGE_luci-app-autoupdate=y    定时更新插件
-CONFIG_PACKAGE_luci-app-ttyd=y        openwrt内置SSH命令窗
-CONFIG_TARGET_IMAGES_GZIP=y         把img压缩成img.gz的，X86一定需要，其他不是.img.gz后缀的机型不需要
+如果有机子是需要.img格式而不是.img.gz的话，可以到diy-3.sh删除以下两行代码：
+找到Diy_Part1在里面有
+
+sed -i '/IMAGES_GZIP/d' .config > /dev/null 2>&1
+echo -e "\nCONFIG_TARGET_IMAGES_GZIP=y" >> .config
+这两行代码，删除了就可以了
+
 ```
 ---
 - ### 使用命令更新固件脚本和扩展空间:
