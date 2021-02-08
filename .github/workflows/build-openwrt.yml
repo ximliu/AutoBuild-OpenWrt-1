@@ -312,12 +312,13 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
     
-    - name: 定时自动更新固件云端地址
+    - name: 定时升级云端地址
       uses: softprops/action-gh-release@v1
       if: steps.compile.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
+        name: 定时升级云端地址
         tag_name: update_Firmware
         body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}
         files: openwrt/bin/Firmware/*
