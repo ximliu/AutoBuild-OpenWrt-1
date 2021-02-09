@@ -5,8 +5,8 @@
 
 Diy_Core() {
 	Author="281677160"
-	Default_Device="friendlyarm_nanopi-r2s"
-	Updete_firmware="squashfs-sysupgrade.img.gz"
+	Default_Device="xiaomi_redmi-router-ac2100"
+	Updete_firmware="phicomm-k3-squashfs.trx"
 	Extension=".img.gz"
 	Source="lede"
 }
