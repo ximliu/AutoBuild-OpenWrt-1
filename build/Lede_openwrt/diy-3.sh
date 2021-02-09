@@ -5,9 +5,9 @@
 
 Diy_Core() {
 	Author="281677160"
-	Default_Device="phicomm-k3"
-	Updete_firmware="phicomm-k3-squashfs.trx"
-	Extension=".trx"
+	Default_Device="xiaomi_redmi-router-ac2100"
+	Updete_firmware="squashfs-sysupgrade.bin"
+	Extension=".bin"
 	Source="lede"
 }
 
