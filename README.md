@@ -19,7 +19,7 @@ CONFIG_TARGET_rockchip=y
 CONFIG_TARGET_rockchip_armv8=y
 CONFIG_TARGET_rockchip_armv8_DEVICE_friendlyarm_nanopi-r2s=y
 
-- 上面的就是机型文件的三项，第三行的DEVICE_跟着的就是机型名字，后面的=y不要，就是friendlyarm_nanopi-r2s
+- 上面的就是机型文件的三项，找到 DEVICE_ 跟着的就是机型名字，后面的=y不要，就是friendlyarm_nanopi-r2s
 - 就我知道没有明确机型名字的有X86跟N1，x86的填写x86-64或者x86-32根据你编译的填写
 - N1的如果有测试，我需要另外的做一份文件
 ```
