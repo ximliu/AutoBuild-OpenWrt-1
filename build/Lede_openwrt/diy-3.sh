@@ -5,9 +5,9 @@
 
 Diy_Core() {
 	Author="281677160"
-	Default_Device="xiaomi_redmi-router-ac2100"
-	Updete_firmware="squashfs-sysupgrade.bin"
-	Extension=".bin"
+	Default_Device="x86-64"
+	Updete_firmware="generic-squashfs-combined.img.gz"
+	Extension=".img.gz"
 	Source="lede"
 }
 
