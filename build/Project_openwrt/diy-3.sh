@@ -5,9 +5,9 @@
 
 Diy_Core() {
 	Author="281677160"
-	Default_Device="phicomm-k3"
-	Updete_firmware="phicomm-k3-squashfs.trx"
-	Extension=".trx"
+	Default_Device="x86-64"
+	Updete_firmware="openwrt-x86-64-combined-squashfs.img.gz"
+	Extension=".img.gz"
 	Source="Project"
 }
 
