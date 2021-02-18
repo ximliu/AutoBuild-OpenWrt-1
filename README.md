@@ -15,7 +15,7 @@ Source="lede"               源码作者名字，随便写，用来区分源码�
 ```
 
 ---
-- 机型名字可以看.config的第三行
+- 机型名字可以看.config的三项
 ```
 CONFIG_TARGET_rockchip=y
 CONFIG_TARGET_rockchip_armv8=y
