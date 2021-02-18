@@ -98,31 +98,48 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        git clone -b main --single-branch https://github.com/281677160/Custom openwrt/common
+        chmod +x openwrt/common/common.sh
+    
+    - name: 公告（每次启动都读取最新内容，展开查看)
+      run: |
         cd openwrt
-        if [ ${{matrix.target}} != openwrt ]; then
-          rm -rf package/lienol/luci-app-timecontrol
-          rm -rf package/diy/luci-app-adguardhome
-          rm -rf package/ctcgfw/{luci-app-argon-config,luci-theme-argonv3,luci-app-adguardhome}
-          rm -rf package/lean/{luci-app-netdata,luci-theme-argon,k3screenctrl}
-        fi
-        
+        source common/common.sh && Diy_notice
+    
     - name: 加载源,patch补丁和自定义设置
       run: |
-        if [ "${{matrix.target}}" == "Lede_phicomm_n1" -o "${{matrix.target}}" == "Project_phicomm_n1" ];then
-          svn co https://github.com/281677160/N1/trunk reform
-        fi
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
+        source common/common.sh && Diy_all
+        if [ ${{matrix.target}} != "openwrt" ]; then
+          if [ $REPO_URL == "https://github.com/coolsnowwolf/lede" ]; then
+            source common/common.sh && Diy_lede
+          elif [ $REPO_URL == "https://github.com/Lienol/openwrt" ]; then
+            source common/common.sh && Diy_lienol
+          elif [ $REPO_URL == "https://github.com/immortalwrt/immortalwrt" ]; then
+            source common/common.sh && Diy_immortalwrt
+          fi
+         fi
         if [ -f "build/${{matrix.target}}/$DIY_P1_SH" ]; then
           chmod +x build/${{matrix.target}}/$DIY_P1_SH
           /bin/bash "build/${{matrix.target}}/$DIY_P1_SH"
         fi
-        if [ "${{matrix.target}}" != "openwrt" ]; then
-          git clone -b $REPO_BRANCH --single-branch https://github.com/281677160/openwrt-package package/danshui
-          svn co https://github.com/281677160/openwrt-package/branches/usb/AutoUpdate package/base-files/files/bin
-          chmod +x package/base-files/files/bin/* ./
+        ./scripts/feeds clean && ./scripts/feeds update -a
+        ./scripts/feeds install -a && ./scripts/feeds install -a
+        source common/common.sh && Diy_all2
+        if [ $REPO_URL == "https://github.com/coolsnowwolf/lede" ]; then
+          source common/common.sh && Diy_lede2
+          echo "NAME2=Lede-" >> $GITHUB_ENV
+          echo "ZUOZHE=lean" >> $GITHUB_ENV
+        elif [ $REPO_URL == "https://github.com/Lienol/openwrt" ]; then
+          source common/common.sh && Diy_lienol2
+          echo "NAME2=Lienol-" >> $GITHUB_ENV
+          echo "ZUOZHE=lienol" >> $GITHUB_ENV
+        elif [ $REPO_URL == "https://github.com/immortalwrt/immortalwrt" ]; then
+          source common/common.sh && Diy_immortalwrt2
+          echo "NAME2=Project-" >> $GITHUB_ENV
+          echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
-        ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a && ./scripts/feeds install -a
         if [ -f "build/${{matrix.target}}/$DIY_P2_SH" ]; then
           chmod +x build/${{matrix.target}}/$DIY_P2_SH
           /bin/bash "build/${{matrix.target}}/$DIY_P2_SH"
@@ -130,13 +147,12 @@ jobs:
         if [ -n "$(ls -A "build/${{matrix.target}}/patches" 2>/dev/null)" ]; then
           find "build/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
         fi
-        mkdir -p files/usr/bin/AdGuardHome/data
         if [ -n "$(ls -A "build/${{matrix.target}}/files" 2>/dev/null)" ]; then
-         cp -rf build/${{matrix.target}}/files files
-         chmod -R 777 build/${{matrix.target}}/files/* ./
+          cp -rf build/${{matrix.target}}/files files
+          chmod -R 777 build/${{matrix.target}}/files/* ./
         fi
         if [ -n "$(ls -A "build/${{matrix.target}}/diy" 2>/dev/null)" ]; then
-         cp -Rf build/${{matrix.target}}/diy/* ./
+          cp -Rf build/${{matrix.target}}/diy/* ./
         fi
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
         if [ "${REGULAR_UPDATE}" == "true" ]; then
@@ -144,23 +160,6 @@ jobs:
           echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
           source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part1
         fi
-        if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-         echo "NAME2=Lede-" >> $GITHUB_ENV
-         echo "ZUOZHE=lean" >> $GITHUB_ENV
-        elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-         echo "NAME2=Lienol-" >> $GITHUB_ENV
-         echo "ZUOZHE=lienol" >> $GITHUB_ENV
-        elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-         echo "NAME2=Project-" >> $GITHUB_ENV
-         echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
-        fi
-        rm -rf {LICENSE,README,README.md}
-        rm -rf ./*/{LICENSE,README,README.md}
-        rm -rf ./*/*/{LICENSE,README,README.md}
-        git clone https://github.com/openwrt-dev/po2lmo.git
-        pushd po2lmo
-        make && sudo make install
-        popd
     
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
