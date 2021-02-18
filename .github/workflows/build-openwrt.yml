@@ -101,7 +101,7 @@ jobs:
         git clone -b main --single-branch https://github.com/281677160/Custom openwrt/common
         chmod +x openwrt/common/common.sh
     
-    - name: 公告（每次启动都读取最新内容，展开可以查看)
+    - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
         source common/common.sh && Diy_notice
