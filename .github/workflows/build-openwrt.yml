@@ -176,14 +176,12 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-        (
         if [ "${REGULAR_UPDATE}" == "true" ]; then
         source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part2
         echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
-        )
     
     - name: 开始编译固件
       id: compile
@@ -215,12 +213,9 @@ jobs:
 
     - name: 编译N1机型时,打包（N1、微加云、贝壳云、我家云、S9xxx）固件
       run: |
-        if [ ${{matrix.target}} == "Lede_phicomm_n1" -o ${{matrix.target}} == "Project_phicomm_n1" ];then
-         cp openwrt/bin/targets/armvirt/*/*.tar.gz reform/openwrt
-         cd reform
-         sudo ./gen_openwrt -d -k latest
-         
-         devices=("phicomm-n1" "rk3328" "s9xxx" "vplus")
+        cd openwrt
+        if [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
+          source common/common.sh && Diy_n1
          cd out
          for x in ${devices[*]}; do
            cd $x
@@ -237,11 +232,9 @@ jobs:
       id: organizer
       run: |
         cd openwrt
-        (
         if [ "${REGULAR_UPDATE}" == "true" ]; then
         source $GITHUB_WORKSPACE/build/${{matrix.target}}/diy-3.sh && Diy_Part3
         fi
-        )
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
         if [ -n "$(ls -A "openwrt/bin/targets/x86" 2>/dev/null)" ]; then
