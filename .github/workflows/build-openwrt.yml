@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lienol_openwrt]
+        target: [Lede_openwrt]
 
         # Lede_openwrt        coolsnowwolf/lede源码
         # Lienol_openwrt      Lienol/openwrt源码
