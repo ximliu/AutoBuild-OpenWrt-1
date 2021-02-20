@@ -33,7 +33,7 @@ env:
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   TZ: Asia/Shanghai
   GITHUB_RELEASE: https://github.com/281677160/build-openwrt/releases
-  Github_Repo: $(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)
+  Github_Repo1: $(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)
 
 jobs: 
   build:
@@ -59,6 +59,7 @@ jobs:
         source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
         echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV
         echo "Author=${{github.actor}}" >> $GITHUB_ENV
+        echo "Author1=${{Github_Repo1}}" >> $GITHUB_ENV
         echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
         echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
         echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
