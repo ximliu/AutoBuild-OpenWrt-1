@@ -28,6 +28,7 @@ on:
 
 env: 
   REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+  REPO2_TOKEN: ${{ github.actor }}
   SCKEY: ${{ secrets.SCKEY }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -109,8 +110,7 @@ jobs:
       run: |
         cd openwrt
         source common/common.sh && Diy_notice
-        git log --pretty=format:"Github_zh=%an"
-        echo "Github_zh=%an" >> $GITHUB_ENV
+        echo "$REPO2_TOKEN=Github_zh" >> $GITHUB_ENV
     
     - name: 加载源,patch补丁和自定义设置
       run: |
