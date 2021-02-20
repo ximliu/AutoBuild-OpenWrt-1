@@ -33,6 +33,7 @@ env:
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
   TZ: Asia/Shanghai
   GITHUB_RELEASE: https://github.com/281677160/build-openwrt/releases
+  Github_Repo: $(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)
 
 jobs: 
   build:
