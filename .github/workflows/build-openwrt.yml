@@ -109,7 +109,7 @@ jobs:
       run: |
         cd openwrt
         source common/common.sh && Diy_notice
-        git https://github.com/281677160/AutoBuild-OpenWrt "--pretty=format:* %an"
+        git log --pretty=format:"Github_zh=%an"
         echo "Github_zh=%an" >> $GITHUB_ENV
     
     - name: 加载源,patch补丁和自定义设置
