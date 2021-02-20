@@ -183,11 +183,17 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+    
+    - name: 编译信息
+      run: |
+        cd openwrt
         if [ "${REGULAR_UPDATE}" == "true" ]; then
         source common/upgrade.sh && Diy_Part2
         echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        else
+        source common/upgrade.sh && Diy_Part02
         fi
     
     - name: 开始编译固件
