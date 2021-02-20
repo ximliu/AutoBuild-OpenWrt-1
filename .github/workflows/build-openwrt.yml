@@ -105,6 +105,7 @@ jobs:
         git clone -b main --single-branch https://github.com/281677160/Custom openwrt/common
         chmod +x openwrt/common/* ./
         Github_zh="%D,%S,%Ds,%a,%A"
+        echo "Github_zh" >> $GITHUB_ENV
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
