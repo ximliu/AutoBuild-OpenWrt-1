@@ -107,8 +107,7 @@ jobs:
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
-        Github_Rel="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
-        echo "GITHUB_RELEASE=${Github_Rel}" >> $GITHUB_ENV
+        echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         source common/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
@@ -179,10 +178,8 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        DEVICES="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
-        echo "DEVICE=${DEVICES}" >> $GITHUB_ENV
-        SUBTARGETS="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
-        echo "SUBTARGET=${SUBTARGETS}" >> $GITHUB_ENV
+        echo "DEVICES=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" >> $GITHUB_ENV
+        echo "SUBTARGETS=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> $GITHUB_ENV
         if [ "$DEVICE" == "x86" ]; then
          echo "NAME1=x86-${SUBTARGET}" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
