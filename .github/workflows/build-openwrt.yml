@@ -178,8 +178,8 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        echo "DEVICES=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" >> $GITHUB_ENV
-        echo "SUBTARGETS=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> $GITHUB_ENV
+        echo "DEVICE=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" >> $GITHUB_ENV
+        echo "SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> $GITHUB_ENV
         if [ "$DEVICE" == "x86" ]; then
          echo "NAME1=x86-${SUBTARGET}" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
