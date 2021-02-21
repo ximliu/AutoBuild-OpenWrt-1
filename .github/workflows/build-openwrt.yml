@@ -116,11 +116,11 @@ jobs:
         cd openwrt
         source common/common.sh && Diy_all
         if [ ${{matrix.target}} != "openwrt" ]; then
-          if [ $REPO_URL == "https://github.com/coolsnowwolf/lede" ]; then
+          if [ ${REPO_URL} == "https://github.com/coolsnowwolf/lede" ]; then
             source common/common.sh && Diy_lede
-          elif [ $REPO_URL == "https://github.com/Lienol/openwrt" ]; then
+          elif [ ${REPO_URL} == "https://github.com/Lienol/openwrt" ]; then
             source common/common.sh && Diy_lienol
-          elif [ $REPO_URL == "https://github.com/immortalwrt/immortalwrt" ]; then
+          elif [ ${REPO_URL} == "https://github.com/immortalwrt/immortalwrt" ]; then
             source common/common.sh && Diy_immortalwrt
           fi
          fi
@@ -131,17 +131,17 @@ jobs:
         ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
         source common/common.sh && Diy_all2
-        if [ $REPO_URL == "https://github.com/coolsnowwolf/lede" ]; then
+        if [ ${REPO_URL} == "https://github.com/coolsnowwolf/lede" ]; then
           source common/common.sh && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
           echo "Source=Lede" >> $GITHUB_ENV
           echo "ZUOZHE=lean" >> $GITHUB_ENV
-        elif [ $REPO_URL == "https://github.com/Lienol/openwrt" ]; then
+        elif [ ${REPO_URL} == "https://github.com/Lienol/openwrt" ]; then
           source common/common.sh && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
           echo "Source=Lienol" >> $GITHUB_ENV
           echo "ZUOZHE=lienol" >> $GITHUB_ENV
-        elif [ $REPO_URL == "https://github.com/immortalwrt/immortalwrt" ]; then
+        elif [ ${REPO_URL} == "https://github.com/immortalwrt/immortalwrt" ]; then
           source common/common.sh && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
           echo "Source=Project" >> $GITHUB_ENV
@@ -162,7 +162,7 @@ jobs:
           cp -Rf build/${{matrix.target}}/diy/* ./
         fi
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
-        if [ "${REGULAR_UPDATE}" == "true" ]; then
+        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
           echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
           source common/upgrade.sh && Diy_Part1
         fi
@@ -178,13 +178,15 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-        source common/upgrade.sh && Diy_Part2
-        echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-        echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-        echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-        else
-        source common/common.sh && Diy_xinxi
+        if [[ ${{matrix.target}} != "openwrt" ]]; then
+          if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+            source common/upgrade.sh && Diy_Part2
+            echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+            echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+            echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+          else
+            source common/common.sh && Diy_xinxi
+          fi
         fi
     
     - name: 下载软件包
@@ -208,12 +210,12 @@ jobs:
         echo "DEVICE=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" >> $GITHUB_ENV
         echo "SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> $GITHUB_ENV
         if [[ "${DEVICE}" == "x86" ]]; then
-         echo "NAME1=x86-${SUBTARGET}" >> $GITHUB_ENV
+          echo "NAME1=x86-${SUBTARGET}" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
-         echo "NAME1=n1,Vplus,Beikeyun,L1Pro,S9xxx" >> $GITHUB_ENV
+          echo "NAME1=n1,Vplus,Beikeyun,L1Pro,S9xxx" >> $GITHUB_ENV
         else
-         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > NAME2
-         [ -s NAME2 ] && echo "NAME1=$(cat NAME2)" >> $GITHUB_ENV
+          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > NAME2
+          [ -s NAME2 ] && echo "NAME1=$(cat NAME2)" >> $GITHUB_ENV
         fi
     
     - name: 上传bin文件夹(固件+ipk)在github空间
@@ -244,8 +246,10 @@ jobs:
       id: organizer
       run: |
         cd openwrt
-        if [ "${REGULAR_UPDATE}" == "true" ]; then
-          source common/upgrade.sh && Diy_Part3
+        if [[ ${{matrix.target}} != "openwrt" ]]; then
+          if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+            source common/upgrade.sh && Diy_Part3
+          fi  
         fi
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
