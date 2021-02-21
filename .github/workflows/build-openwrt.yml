@@ -103,7 +103,7 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         git clone -b main --single-branch https://github.com/281677160/Custom openwrt/common
         chmod +x openwrt/common/* ./
-        mv common/{AutoUpdate.sh,AutoBuild_Tools.sh} openwrt/package/base-files/files/bin
+        mv openwrt/common/{AutoUpdate.sh,AutoBuild_Tools.sh} openwrt/package/base-files/files/bin
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
