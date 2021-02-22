@@ -107,11 +107,6 @@ jobs:
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
-        mv build/AutoUpdate/AutoUpdate.sh package/base-files/files/bin
-        chmod +x package/base-files/files/bin/* ./
-        mkdir common
-        mv build/AutoUpdate/upgrade.sh common
-        chmod +x common/* ./
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
     
     - name: 加载源,patch补丁和自定义设置
@@ -166,6 +161,11 @@ jobs:
           cp -Rf build/${{matrix.target}}/diy/* ./
         fi
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
+        mv build/AutoUpdate/AutoUpdate.sh package/base-files/files/bin
+        chmod +x package/base-files/files/bin/* ./
+        mkdir common
+        mv build/AutoUpdate/upgrade.sh common
+        chmod +x common/* ./
         if [[ "${REGULAR_UPDATE}" == "true" ]]; then
           echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
           source common/upgrade.sh && Diy_Part1
