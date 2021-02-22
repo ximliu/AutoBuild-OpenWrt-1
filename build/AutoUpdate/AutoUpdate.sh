@@ -74,10 +74,10 @@ opkg list | awk '{print $1}' > /tmp/Package_list
 Input_Option="$1"
 Input_Other="$2"
 Github="$(awk 'NR==2' /etc/openwrt_info)"
+Source="$(awk 'NR==5' /etc/openwrt_info)"
 CURRENT_Version="$(awk 'NR==1' /etc/openwrt_info)"
 DEFAULT_Device="$(awk 'NR==3' /etc/openwrt_info)"
 Firmware_Type="$(awk 'NR==4' /etc/openwrt_info)"
-Source="$(awk 'NR==5' /etc/openwrt_info)"
 TMP_Available="$(df -m | grep "/tmp" | awk '{print $4}' | awk 'NR==1')"
 Overlay_Available="$(df -h | grep ":/overlay" | awk '{print $4}' | awk 'NR==1')"
 case ${DEFAULT_Device} in
