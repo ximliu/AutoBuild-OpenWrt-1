@@ -48,7 +48,7 @@ List_Info() {
 	echo "解析 API 地址:	${Github_Tags}"
 	echo "固件下载地址:	${Github_Download}"
 	echo "作者/仓库:	${Author}"
-	if [[ ${DEFAULT_Device} == "x86_64" ]];then
+	if [[ ${DEFAULT_Device} == "x86-64" ]];then
 		echo "EFI 引导: 	${EFI_Boot}"
 		echo "固件压缩:	${Compressed_x86}"
 	fi
