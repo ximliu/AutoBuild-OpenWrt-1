@@ -26,7 +26,8 @@ GET_TARGET_INFO() {
 	case "${TARGET_PROFILE}" in
 	x86-64)
 		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
-		if [[ "${GZIP}" == CONFIG_TARGET_IMAGES_GZIP=y ]];then
+		IMAGES_GZIP="CONFIG_TARGET_IMAGES_GZIP=y"
+		if [[ "${GZIP}" -eq "${IMAGES_GZIP}" ]];then
 			Firmware_sfx="img.gz"
 		else
 			Firmware_sfx="img"
