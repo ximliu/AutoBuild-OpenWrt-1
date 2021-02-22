@@ -1,14 +1,15 @@
 - ## 定时更新固件测试，一定要先设置好发布密匙，因为检测更新是检测github的发布地址
 
-- ### 理论上在openwrt-系统-备份/升级里能后台升级的机子都支持定时更新的，R2S/R4S这些用TF卡的就不支持，N1不支持
+- ### 理论上在openwet后台可以升级的都应该可以支持定时更新，后台升级地址｛openwrt-系统-备份/升级｝，R2S/R4S这些用TF卡的就不支持，N1不支持
 
 - ### 测试方法，分别在两个时间段启动编译，比如1:00启动一个编译,然后1:05分启动一个编译，完成后，安装1:00的，就会自动检测到1:05的
 #
 - ### 在build/机型文件夹/settings.ini，以下三项设置好就可以把定时更新固件的插件编译进openwrt
+- 
 ```
 REGULAR_UPDATE="false"        #把定时自动更新编译进固件（请看说明）（true=开启）（false=关闭）
-Updete_firmware="squashfs-combined.img.gz"     #自动更新时候安装的固件名字
-Extension="img.gz"       #自动更新时候安装的固件名字的后缀
+Updete_firmware="squashfs-combined.img.gz"     #你在openwrt后台升级时候所用的固件名称
+Extension="img.gz"       #你在openwrt后台升级时候所用的固件名称的后缀
 ```
 
 - ### 自动在你现有的.config配置增加以下二个插件，免除SSH进去选择
