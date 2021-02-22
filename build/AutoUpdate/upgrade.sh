@@ -18,23 +18,18 @@ GET_TARGET_INFO() {
 	TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
         if [[ "${TARGET_BOARD}" == "x86" ]]; then
-		TARGET_PROFILE="x86-${TARGET_SUBTARGET}"
+		TARGET_PROFILE="x86-64"
 	else
 		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	fi
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
 	case "${TARGET_PROFILE}" in
-	x86_64)
+	x86-64)
 		grep "CONFIG_TARGET_IMAGES_GZIP=y" ${Home}/.config
 		if [[ ! $? -ne 0 ]];then
 			Firmware_sfx="img.gz"
 		else
 			Firmware_sfx="img"
-		fi
-		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			Firmware_sfx=".trx"
-		elif [[ "${TARGET_PROFILE}" == "d-team_newifi-d2" ]]; then
-			Firmware_sfx=".bin"
 		fi
 	;;
 	*)
