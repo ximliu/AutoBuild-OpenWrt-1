@@ -101,21 +101,21 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        git clone https://github.com/281677160/luci-app-autoupdate openwrt/package/luci-app-autoupdate
-        
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
-        echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
-    
-    - name: 加载源,patch补丁和自定义设置
-      run: |
-        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
-        cd openwrt
         mkdir -p common
         mv build/AutoUpdate/{upgrade.sh,common.sh} common
         chmod +x common/* ./
+        source common/common.sh && Diy_notice
+        echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
+        git clone https://github.com/281677160/luci-app-autoupdate package/luci-app-autoupdate
+    
+    - name: 加载源,patch补丁和自定义设置
+      run: |
+        cd openwrt
         source common/common.sh && Diy_all
         if [ ${{matrix.target}} != "openwrt" ]; then
           if [ ${REPO_URL} == "https://github.com/coolsnowwolf/lede" ]; then
