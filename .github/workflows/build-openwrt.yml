@@ -108,8 +108,6 @@ jobs:
       run: |
         cd openwrt
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
-        chmod +x common/* ./
-        source common/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
       run: |
