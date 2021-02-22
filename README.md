@@ -5,7 +5,7 @@
 - ### 测试方法，分别在两个时间段启动编译，比如1:00启动一个编译,然后1:05分启动一个编译，完成后，安装1:00的，就会自动检测到1:05的
 #
 - ### 在build/机型文件夹/settings.ini，以下三项设置好就可以把定时更新固件的插件编译进openwrt
-- 
+
 ```
 REGULAR_UPDATE="false"        #把定时自动更新编译进固件（请看说明）（true=开启）（false=关闭）
 Updete_firmware="squashfs-combined.img.gz"     #你在openwrt后台升级时候所用的固件名称
