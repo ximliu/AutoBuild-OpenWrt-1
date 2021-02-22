@@ -20,7 +20,7 @@ GET_TARGET_INFO() {
 	else
 		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	fi
-	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="${Default_Device}"
+	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
 	case "${TARGET_PROFILE}" in
 	x86_64)
 		grep "CONFIG_TARGET_IMAGES_GZIP=y" ${Home}/.config
@@ -29,9 +29,14 @@ GET_TARGET_INFO() {
 		else
 			Firmware_sfx="img"
 		fi
+		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+			Firmware_sfx=".trx"
+		elif [[ "${TARGET_PROFILE}" == "d-team_newifi-d2" ]]; then
+			Firmware_sfx=".bin"
+		fi
 	;;
 	*)
-		Firmware_sfx="bin"
+		Firmware_sfx="${Extension}"
 	;;
 	esac
 	TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
