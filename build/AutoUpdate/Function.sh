@@ -15,7 +15,7 @@ GET_TARGET_INFO() {
 	Openwrt_Version="${Lede_Version}-${Compile_Date}"
 	x86_Test="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_(.*)=y/\1/')"
 	if [[ "${x86_Test}" == "x86_64" ]];then
-		TARGET_PROFILE="x86_64"
+		TARGET_PROFILE="x86-64"
 	else
 		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	fi
@@ -42,30 +42,13 @@ GET_TARGET_INFO() {
 Diy_Part1() {
 	Diy_Core
 	GET_TARGET_INFO
-	Replace_File Customize/uhttpd.po feeds/luci/applications/luci-app-uhttpd/po/zh-cn
-	Replace_File Customize/webadmin.po package/lean/luci-app-webadmin/po/zh-cn
-	Replace_File Customize/mwan3.config package/feeds/packages/mwan3/files/etc/config mwan3
-	if [[ "${INCLUDE_Enable_FirewallPort_53}" == "true" ]];then
-		[ -f "${Default_File}" ] && sed -i "s?iptables?#iptables?g" ${Default_File} > /dev/null 2>&1
-	fi
-	if [[ "${INCLUDE_AutoUpdate}" == "true" ]];then
-		ExtraPackages git lean luci-app-autoupdate https://github.com/Hyy2001X main
-		sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
-		echo -e "\nCONFIG_PACKAGE_luci-app-autoupdate=y" >> .config
-		Replace_File Scripts/AutoUpdate.sh package/base-files/files/bin
-		AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
-		[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
-		sed -i "s?Openwrt?Openwrt ${Openwrt_Version} / AutoUpdate ${AutoUpdate_Version}?g" package/base-files/files/etc/banner
-		echo "AutoUpdate Version: ${AutoUpdate_Version}"
-	else
-		sed -i "s?Openwrt?Openwrt ${Openwrt_Version}?g" package/base-files/files/etc/banner
-	fi
+	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
+	[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
 	[[ -z "${Author}" ]] && Author="Unknown"
 	echo "Author: ${Author}"
 	echo "Openwrt Version: ${Openwrt_Version}"
 	echo "Router: ${TARGET_PROFILE}"
 	echo "Github: ${Github_Repo}"
-	[ -f "$Default_File" ] && sed -i "s?${Lede_Version}?${Lede_Version} Compiled by ${Author} [${Display_Date}]?g" $Default_File
 	echo "${Openwrt_Version}" > ${AutoBuild_Info}
 	echo "${Github_Repo}" >> ${AutoBuild_Info}
 	echo "${TARGET_PROFILE}" >> ${AutoBuild_Info}
