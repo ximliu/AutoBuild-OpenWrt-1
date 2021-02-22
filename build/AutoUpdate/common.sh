@@ -4,6 +4,8 @@
 
 Diy_all() {
 echo "all"
+svn co https://github.com/jerrykuku/luci-theme-argon/branches/18.06 package/luci-theme-argon
+svn co https://github.com/jerrykuku/luci-app-argon-config/trunk package/luci-app-argon-config
 }
 
 # 全脚本源码通用diy2.sh文件
@@ -29,7 +31,7 @@ Diy_lede() {
 echo "LEDE源码自定义1"
 rm -rf package/lean/{luci-app-netdata,luci-theme-argon,k3screenctrl}
 
-git clone https://github.com/fw876/helloworld package/danshui/luci-app-ssr-plus
+git clone https://github.com/fw876/helloworld package/luci-app-ssr-plus
 
 }
 
