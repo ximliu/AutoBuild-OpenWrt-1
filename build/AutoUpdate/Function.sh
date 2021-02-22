@@ -40,6 +40,19 @@ GET_TARGET_INFO() {
 }
 
 Diy_Part1() {
+	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_PACKAGE_luci-app-autoupdate=y" >> .config
+	sed -i '/luci-app-ttyd/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_PACKAGE_luci-app-ttyd=y" >> .config
+	sed -i '/IMAGES_GZIP/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_TARGET_IMAGES_GZIP=y" >> .config
+	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_PACKAGE_luci-app-autoupdate=y" >> .config
+	sed -i '/luci-app-ttyd/d' .config > /dev/null 2>&1
+	echo -e "\nCONFIG_PACKAGE_luci-app-ttyd=y" >> .config
+}
+
+Diy_Part2() {
 	Diy_Core
 	GET_TARGET_INFO
 	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
@@ -59,7 +72,7 @@ Diy_Part1() {
 	
 }
 
-Diy_Part2() {
+Diy_Part3() {
 	Diy_Core
 	GET_TARGET_INFO
 	Firmware_Path="bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
