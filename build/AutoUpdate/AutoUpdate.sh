@@ -81,7 +81,7 @@ Source="$(awk 'NR==5' /etc/openwrt_info)"
 TMP_Available="$(df -m | grep "/tmp" | awk '{print $4}' | awk 'NR==1')"
 Overlay_Available="$(df -h | grep ":/overlay" | awk '{print $4}' | awk 'NR==1')"
 case ${DEFAULT_Device} in
-x86_64)
+x86-64)
 	[[ -z ${Firmware_Type} ]] && Firmware_Type="img"
 	if [[ "${Firmware_Type}" == "img.gz" ]];then
 		Compressed_x86="1"
@@ -97,7 +97,7 @@ x86_64)
 	fi
 	Firmware_SFX="${BOOT_Type}.${Firmware_Type}"
 	Detail_SFX="${BOOT_Type}.detail"
-	CURRENT_Device="x86_64"
+	CURRENT_Device="x86-64"
 	Space_RQM=500
 ;;
 *)
