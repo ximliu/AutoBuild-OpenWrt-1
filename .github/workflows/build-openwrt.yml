@@ -101,9 +101,10 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        git clone -b main --single-branch https://github.com/281677160/Custom openwrt/common
-        chmod +x openwrt/common/* ./
-        mv openwrt/common/{AutoUpdate.sh,AutoBuild_Tools.sh} openwrt/package/base-files/files/bin
+        mv openwrt/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
+        chmod +x openwrt/package/base-files/files/bin/* ./
+        mkdir -p openwrt/common
+        
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
@@ -331,7 +332,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         name: 定时升级云端地址
-        tag_name: update_Firmware
+        tag_name: AutoUpdate
         body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}（完成时间-${{ env.date }}）
         files: openwrt/bin/Firmware/*
     
