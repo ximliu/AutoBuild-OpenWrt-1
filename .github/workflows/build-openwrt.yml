@@ -119,7 +119,7 @@ jobs:
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         git clone https://github.com/281677160/luci-app-autoupdate package/luci-app-autoupdate
         mv build/AutoUpdate/AutoUpdate.sh package/base-files/files/bin
-        chmod +x package/base-files/files/bin/AutoUpdate1.sh
+        chmod +x package/base-files/files/bin/AutoUpdate.sh
     
     - name: 加载源,patch补丁和自定义设置
       run: |
