@@ -9,7 +9,7 @@
 ```
 REGULAR_UPDATE="false"        #把定时自动更新编译进固件（true=开启）（false=关闭）
 Updete_firmware="squashfs-combined.img.gz"     #你在openwrt后台升级时候所用的固件名称
-Extension="img.gz"       #你在openwrt后台升级时候所用的固件名称的后缀
+Extension=".img.gz"       #你在openwrt后台升级时候所用的固件名称的后缀
 ```
 
 - ### 自动在你现有的.config配置增加以下二个插件，免除SSH进去选择
