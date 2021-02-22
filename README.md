@@ -7,7 +7,7 @@
 - ### 在build/机型文件夹/settings.ini，以下三项设置好就可以把定时更新固件的插件编译进openwrt
 
 ```
-REGULAR_UPDATE="false"        #把定时自动更新编译进固件（请看说明）（true=开启）（false=关闭）
+REGULAR_UPDATE="false"        #把定时自动更新编译进固件（true=开启）（false=关闭）
 Updete_firmware="squashfs-combined.img.gz"     #你在openwrt后台升级时候所用的固件名称
 Extension="img.gz"       #你在openwrt后台升级时候所用的固件名称的后缀
 ```
