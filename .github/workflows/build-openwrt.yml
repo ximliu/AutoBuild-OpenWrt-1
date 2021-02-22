@@ -342,7 +342,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         name: 定时升级云端地址
-        tag_name: update_Firmware
+        tag_name: AutoUpdate
         body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}（完成时间-${{ env.date }}）
         files: openwrt/bin/Firmware/*
     
