@@ -74,7 +74,7 @@ Diy_Part3() {
 	Firmware_Path="bin/targets/${TARGET_BOARD}/${TARGET_SUBTARGET}"
 	Mkdir bin/Firmware
 	case "${TARGET_PROFILE}" in
-	x86_64)
+	x86-64)
 		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 			cd ${Firmware_Path}
 			Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined.${Firmware_sfx}
