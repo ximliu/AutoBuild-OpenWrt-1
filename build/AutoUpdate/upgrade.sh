@@ -13,9 +13,10 @@ GET_TARGET_INFO() {
 	[ -f ${Default_File} ] && Lede_Version="$(egrep -o "R[0-9]+\.[0-9]+\.[0-9]+" ${Default_File})"
 	[[ -z ${Lede_Version} ]] && Lede_Version="Openwrt"
 	Openwrt_Version="${Lede_Version}-${Compile_Date}"
-	x86_Test="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/CONFIG_TARGET_(.*)_DEVICE_(.*)=y/\1/')"
-	if [[ "${x86_Test}" == "x86_64" ]];then
-		TARGET_PROFILE="x86-64"
+	DEVICEC="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
+        SUBTARGETE="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+        if [[ "${DEVICEC}" == "x86" ]]; then
+		TARGET_PROFILE="x86-${SUBTARGETE}"
 	else
 		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	fi
