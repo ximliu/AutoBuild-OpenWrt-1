@@ -185,9 +185,11 @@ jobs:
         if [[ ${{matrix.target}} != "openwrt" ]]; then
           if [[ "${REGULAR_UPDATE}" == "true" ]]; then
             source common/upgrade.sh && Diy_Part2
-            echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+            echo "log1=$(awk 'NR==5' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
             echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
             echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+            echo "log4=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+            echo "log5=$(awk 'NR==2' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
           else
             source common/common.sh && Diy_xinxi
           fi
@@ -335,7 +337,7 @@ jobs:
       with:
         name: 定时升级云端地址
         tag_name: AutoUpdate
-        body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}（完成时间-${{ env.date }}）
+        body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}-${{ env.log5 }}-${{ env.log5 }}
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
