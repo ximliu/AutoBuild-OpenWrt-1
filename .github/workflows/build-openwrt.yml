@@ -5,7 +5,7 @@
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # <https://github.com/P3TERX/Actions-OpenWrt.git>
 #
-name: 编译update_Firmware
+name: 编译OpenWrt固件
 on:
   workflow_dispatch:
     inputs:
@@ -42,11 +42,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lede_openwrt,Lienol_openwrt,Project_openwrt]
+        target: [Lede_x86_64]
 
-        # Lede_openwrt        coolsnowwolf/lede源码
-        # Lienol_openwrt      Lienol/openwrt源码
-        # Project_openwrt     immortalwrt/immortalwrt源码
+     # [Lede_x86_64,Lede_gl_mt300n_v2,Lede_nanopi_r2s,Lede_nanopi_r4s,Lede_newifi_d2,p2w_r619ac_128m,Lede_phicomm_k2p,Lede_phicomm_n1,Lede_redmi_ac2100,Lede_wankeyun,Lede_wndr3800,Lede_wndr4300_v1,Lede_wr703n_v1,Lede_xiaomi_r3pro,Lede_xiaoyu_c5,Lede_Raspberry_Pi4]
+
+     # [Lienol_phicomm_k2p,Lienol_phicomm_k3,Lienol_x86_64]
+
+     # [Project_x86_64,Project_nanopi_r2s,Project_nanopi_r4s,Project_newifi_d2,Project_phicomm_k3,Project_phicomm_n1,Project_xiaomi_ac2100,Project_xiaomi_mir3g,Project_xiaoyu_c5]
+
+     # [openwrt] 
+
+     # 除了编译【openwrt】机型外，其他机型都直接打入了常用插件了，不需要自己再拉取插件，除非我的插件包跟源码自带的都没有，你就自己添加吧，说明的《各种命令的简单介绍》有教程。
+     # 选择编译【openwrt】纯天然不经任何修改的，增加插件可以在diy-1.sh增加，也可在settings.ini里修改成你想要编译的源码跟分支。
+     # 选择【Lede_phicomm_n1或Project_phicomm_n1】的机型文件夹编译的话，会自动编译出（ N1、微加云、贝壳云、我家云、S9xxx ）固件。
 
     steps:
     - name: 准备结束
@@ -118,14 +126,14 @@ jobs:
         cd openwrt
         source common/common.sh && Diy_all
         if [ ${{matrix.target}} != "openwrt" ]; then
-          if [ ${REPO_URL} == "https://github.com/coolsnowwolf/lede" ]; then
+          if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
             source common/common.sh && Diy_lede
-          elif [ ${REPO_URL} == "https://github.com/Lienol/openwrt" ]; then
+          elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
             source common/common.sh && Diy_lienol
-          elif [ ${REPO_URL} == "https://github.com/immortalwrt/immortalwrt" ]; then
+          elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
             source common/common.sh && Diy_immortalwrt
           fi
-         fi
+        fi
         if [ -f "build/${{matrix.target}}/$DIY_P1_SH" ]; then
           chmod +x build/${{matrix.target}}/$DIY_P1_SH
           /bin/bash "build/${{matrix.target}}/$DIY_P1_SH"
@@ -133,17 +141,17 @@ jobs:
         ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
         source common/common.sh && Diy_all2
-        if [ ${REPO_URL} == "https://github.com/coolsnowwolf/lede" ]; then
+        if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
           source common/common.sh && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
           echo "Source=Lede" >> $GITHUB_ENV
           echo "ZUOZHE=lean" >> $GITHUB_ENV
-        elif [ ${REPO_URL} == "https://github.com/Lienol/openwrt" ]; then
+        elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
           source common/common.sh && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
           echo "Source=Lienol" >> $GITHUB_ENV
           echo "ZUOZHE=lienol" >> $GITHUB_ENV
-        elif [ ${REPO_URL} == "https://github.com/immortalwrt/immortalwrt" ]; then
+        elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
           source common/common.sh && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
           echo "Source=Project" >> $GITHUB_ENV
@@ -164,13 +172,13 @@ jobs:
           cp -Rf build/${{matrix.target}}/diy/* ./
         fi
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
-        mv build/AutoUpdate/AutoUpdate.sh package/base-files/files/bin
-        chmod +x package/base-files/files/bin/* ./
-        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-          echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-          source common/upgrade.sh && Diy_Part1
+        if [ ${{matrix.target}} != "openwrt" ]; then
+          if [ "${REGULAR_UPDATE}" == "true" ]; then
+            echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
+            source common/upgrade.sh && Diy_Part1
+          fi
         fi
-    
+     
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
       if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
@@ -178,30 +186,28 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: 编译信息
-      run: |
-        cd openwrt
-        make defconfig
-        if [[ ${{matrix.target}} != "openwrt" ]]; then
-          if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-            source common/upgrade.sh && Diy_Part2
-            echo "log1=$(awk 'NR==5' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log4=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log5=$(awk 'NR==2' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-          else
-            source common/common.sh && Diy_xinxi
-          fi
-        fi
-    
     - name: 下载软件包
       id: package
       run: |
         cd openwrt
+        make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+    
+    - name: 编译信息
+      run: |
+        cd openwrt
+        if [[ ${{matrix.target}} != "openwrt" ]]; then
+          if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+            source common/upgrade.sh && Diy_Part2
+            echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+            echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+            echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+          else
+            source common/common.sh && Diy_xinxi
+          fi
+        fi
     
     - name: 开始编译固件
       id: compile
@@ -213,15 +219,15 @@ jobs:
         echo "date=$(date "+%y.%m.%d-%H%M")" >> $GITHUB_ENV
         echo "date1=$(date "+%Y年%m月%d号-%H点%M分")" >> $GITHUB_ENV
         echo "date2=$(date "+%Y%m%d%H%M%S")" >> $GITHUB_ENV
-        echo "DEVICE=$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" >> $GITHUB_ENV
-        echo "SUBTARGET=$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> $GITHUB_ENV
-        if [[ "${DEVICE}" == "x86" ]]; then
-          echo "NAME1=x86-${SUBTARGET}" >> $GITHUB_ENV
+        DEVICE="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
+        SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+        if [ "${DEVICE}" == "x86" ]; then
+         echo "NAME1=x86-${SUBTARGET}" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
-          echo "NAME1=n1,Vplus,Beikeyun,L1Pro,S9xxx" >> $GITHUB_ENV
-        else
-          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > NAME2
-          [ -s NAME2 ] && echo "NAME1=$(cat NAME2)" >> $GITHUB_ENV
+         echo "NAME1=n1,Vplus,Beikeyun,L1Pro,S9xxx" >> $GITHUB_ENV
+        elif [ "${DEVICE}" != "x86" ]; then
+         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > NAME1
+         [ -s NAME1 ] && echo "NAME1=$(cat NAME1)" >> $GITHUB_ENV
         fi
     
     - name: 上传bin文件夹(固件+ipk)在github空间
@@ -260,7 +266,7 @@ jobs:
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
         if [ -n "$(ls -A "openwrt/bin/targets/x86" 2>/dev/null)" ]; then
-         find bin/targets/x86/* -name "*kernel*" | xargs -i mv -f {} bin/targets
+          find bin/targets/x86/* -name "*kernel*" | xargs -i mv -f {} bin/targets
         fi
         cd bin/targets/*/*
         rm -rf packages && mkdir packages
@@ -315,7 +321,7 @@ jobs:
       with:
         name: ${{ env.date1 }} 「 ${{ env.WXFB_MESSAGE }} 」固件
         tag_name: ${{ env.date2 }}
-        body: |            
+        body: |
             ☆  源码 : ${{ env.REPO_URL }}
             ☆  分支 : ${{ env.REPO_BRANCH }}
             ☆  感谢源码作者[ ${{ env.ZUOZHE }}大神 ]无私分享！
@@ -336,8 +342,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         name: 定时升级云端地址
-        tag_name: AutoUpdate
-        body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}-${{ env.log5 }}-${{ env.log5 }}
+        tag_name: update_Firmware
+        body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}（完成时间-${{ env.date }}）
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
