@@ -102,16 +102,16 @@ jobs:
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         git clone https://github.com/281677160/luci-app-autoupdate openwrt/package/luci-app-autoupdate
-        mv openwrt/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
-        chmod +x openwrt/package/base-files/files/bin/* ./
-        mkdir -p openwrt/common
-        mv openwrt/build/AutoUpdate/upgrade.sh openwrt/common
-        chmod +x openwrt/common/* ./
         
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
+        mv build/AutoUpdate/AutoUpdate.sh package/base-files/files/bin
+        chmod +x package/base-files/files/bin/* ./
+        mkdir common
+        mv build/AutoUpdate/upgrade.sh common
+        chmod +x common/* ./
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         source common/common.sh && Diy_notice
     
