@@ -105,7 +105,7 @@ jobs:
         mv openwrt/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
         chmod +x openwrt/package/base-files/files/bin/* ./
         mkdir -p openwrt/common
-        mv openwrt/build/AutoUpdate/common.sh openwrt/common
+        mv openwrt/build/AutoUpdate/upgrade.sh openwrt/common
         chmod +x openwrt/common/* ./
         
     
