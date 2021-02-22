@@ -101,9 +101,12 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        git clone https://github.com/281677160/luci-app-autoupdate openwrt/package/luci-app-autoupdate
         mv openwrt/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
         chmod +x openwrt/package/base-files/files/bin/* ./
         mkdir -p openwrt/common
+        mv openwrt/build/AutoUpdate/common.sh openwrt/common
+        chmod +x openwrt/common/* ./
         
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
