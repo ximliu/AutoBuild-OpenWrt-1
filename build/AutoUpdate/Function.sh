@@ -83,25 +83,71 @@ Diy_Part2() {
 	Mkdir bin/Firmware
 	case "${TARGET_PROFILE}" in
 	x86_64)
-		cd ${Firmware_Path}
-		Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined.${Firmware_sfx}
-		EFI_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined-efi.${Firmware_sfx}
-		AutoBuild_Firmware="${Source}-${TARGET_PROFILE}-${Openwrt_Version}"
-		if [ -f "${Legacy_Firmware}" ];then
-			_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
-			_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
-			touch ${Home}/bin/Firmware/${AutoBuild_Firmware}.detail
-			echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.detail
-			mv -f ${Legacy_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.${Firmware_sfx}
-			echo "Legacy Firmware is detected !"
+		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+			cd ${Firmware_Path}
+			Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined.${Firmware_sfx}
+			EFI_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined-efi.${Firmware_sfx}
+			AutoBuild_Firmware="${Source}-${TARGET_PROFILE}-${Openwrt_Version}"
+			if [ -f "${Legacy_Firmware}" ];then
+				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
+				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
+				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}.detail
+				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.detail
+				mv -f ${Legacy_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.${Firmware_sfx}
+				echo "Legacy Firmware is detected !"
+			fi
+			if [ -f "${EFI_Firmware}" ];then
+				_MD5=$(md5sum ${EFI_Firmware} | cut -d ' ' -f1)
+				_SHA256=$(sha256sum ${EFI_Firmware} | cut -d ' ' -f1)
+				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
+				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
+				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
+				echo "UEFI Firmware is detected !"
+			fi
 		fi
-		if [ -f "${EFI_Firmware}" ];then
-			_MD5=$(md5sum ${EFI_Firmware} | cut -d ' ' -f1)
-			_SHA256=$(sha256sum ${EFI_Firmware} | cut -d ' ' -f1)
-			touch ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
-			echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
-			cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
-			echo "UEFI Firmware is detected !"
+		if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
+			cd ${Firmware_Path}
+			Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs.${Firmware_sfx}
+			EFI_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs-efi.${Firmware_sfx}
+			AutoBuild_Firmware="${Source}-${TARGET_PROFILE}-${Openwrt_Version}"
+			if [ -f "${Legacy_Firmware}" ];then
+				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
+				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
+				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}.detail
+				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.detail
+				mv -f ${Legacy_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.${Firmware_sfx}
+				echo "Legacy Firmware is detected !"
+			fi
+			if [ -f "${EFI_Firmware}" ];then
+				_MD5=$(md5sum ${EFI_Firmware} | cut -d ' ' -f1)
+				_SHA256=$(sha256sum ${EFI_Firmware} | cut -d ' ' -f1)
+				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
+				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
+				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
+				echo "UEFI Firmware is detected !"
+			fi
+		fi
+		if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
+			cd ${Firmware_Path}
+			Legacy_Firmware=immortalwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs.${Firmware_sfx}
+			EFI_Firmware=immortalwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-uefi-gpt-squashfs.${Firmware_sfx}
+			AutoBuild_Firmware="${Source}-${TARGET_PROFILE}-${Openwrt_Version}"
+			if [ -f "${Legacy_Firmware}" ];then
+				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
+				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
+				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}.detail
+				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.detail
+				mv -f ${Legacy_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-Legacy.${Firmware_sfx}
+				echo "Legacy Firmware is detected !"
+			fi
+			if [ -f "${EFI_Firmware}" ];then
+				_MD5=$(md5sum ${EFI_Firmware} | cut -d ' ' -f1)
+				_SHA256=$(sha256sum ${EFI_Firmware} | cut -d ' ' -f1)
+				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
+				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
+				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
+				echo "UEFI Firmware is detected !"
+			fi
 		fi
 	;;
 	*)
