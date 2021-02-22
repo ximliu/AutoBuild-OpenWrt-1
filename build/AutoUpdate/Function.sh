@@ -72,6 +72,7 @@ Diy_Part1() {
 	echo "Firmware Type: ${Firmware_sfx}"
 	echo "Writting Type: ${Firmware_sfx} to ${AutoBuild_Info} ..."
 	echo "${Firmware_sfx}" >> ${AutoBuild_Info}
+	echo "${Source}" >> ${AutoBuild_Info}
 	
 }
 
