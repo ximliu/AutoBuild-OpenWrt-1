@@ -29,7 +29,6 @@ mkdir -p files/usr/bin/AdGuardHome/data
 
 Diy_lede() {
 echo "LEDE源码自定义1"
-rm -rf package/lean/{luci-app-netdata,luci-theme-argon,k3screenctrl}
 
 git clone https://github.com/fw876/helloworld package/luci-app-ssr-plus
 
@@ -52,8 +51,6 @@ echo "LEDE源码自定义2"
 
 Diy_lienol() {
 echo "LIENOL源码自定义1"
-rm -rf package/diy/luci-app-adguardhome
-rm -rf package/lean/{luci-app-netdata,luci-theme-argon,k3screenctrl}
 
 git clone https://github.com/xiaorouji/openwrt-passwall package/danshui/luci-app-passwall
 }
