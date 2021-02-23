@@ -186,18 +186,10 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
-    - name: 下载软件包
-      id: package
-      run: |
-        cd openwrt
-        make defconfig
-        make download -j8
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
-    
     - name: 编译信息
       run: |
         cd openwrt
+        make defconfig
         if [ ${{matrix.target}} != "openwrt" ]; then
           if [ "${REGULAR_UPDATE}" == "true" ]; then
             source common/upgrade.sh && Diy_Part2
@@ -208,6 +200,14 @@ jobs:
             source common/common.sh && Diy_xinxi
           fi
         fi
+    
+    - name: 下载软件包
+      id: package
+      run: |
+        cd openwrt
+        make download -j8
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
     
     - name: 开始编译固件
       id: compile
