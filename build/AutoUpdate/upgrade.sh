@@ -31,11 +31,13 @@ GET_TARGET_INFO() {
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
 	case "${TARGET_PROFILE}" in
 	x86_64)
-		grep "CONFIG_TARGET_IMAGES_GZIP=y" ${Home}/.config
+		GZIP="$(grep "# CONFIG_TARGET_IMAGES_GZIP is not set" ${Home}/.config)"
+		IMAGES_GZIP="CONFIG_TARGET_IMAGES_GZIP=y"
+		if [[ "${GZIP}" -eq "${IMAGES_GZIP}" ]];then
 		if [[ ! $? -ne 0 ]];then
-			Firmware_sfx="img.gz"
-		else
 			Firmware_sfx="img"
+		else
+			Firmware_sfx="img.gz"
 		fi
 	;;
 	*)
@@ -49,8 +51,6 @@ Diy_Part1() {
 	echo -e "\nCONFIG_PACKAGE_luci-app-autoupdate=y" >> .config
 	sed -i '/luci-app-ttyd/d' .config > /dev/null 2>&1
 	echo -e "\nCONFIG_PACKAGE_luci-app-ttyd=y" >> .config
-	sed -i '/IMAGES_GZIP/d' .config > /dev/null 2>&1
-	echo -e "\nCONFIG_TARGET_IMAGES_GZIP=y" >> .config
 }
 
 Diy_Part2() {
