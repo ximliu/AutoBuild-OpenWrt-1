@@ -39,7 +39,7 @@ GET_TARGET_INFO() {
 		fi
 	;;
 	*)
-		Firmware_sfx="bin"
+		Firmware_sfx="${Extension}"
 	;;
 	esac
 }
