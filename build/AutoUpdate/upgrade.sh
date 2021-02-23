@@ -31,16 +31,15 @@ GET_TARGET_INFO() {
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
 	case "${TARGET_PROFILE}" in
 	x86_64)
-		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
-		IMAGES_GZIP="CONFIG_TARGET_IMAGES_GZIP=y"
-		if [[ "${GZIP}" -eq "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
+		grep "CONFIG_TARGET_IMAGES_GZIP=y" ${Home}/.config
+		if [[ ! $? -ne 0 ]];then
 			Firmware_sfx="img.gz"
 		else
 			Firmware_sfx="img"
 		fi
 	;;
 	*)
-		Firmware_sfx="${Extension}"
+		Firmware_sfx="bin"
 	;;
 	esac
 }
