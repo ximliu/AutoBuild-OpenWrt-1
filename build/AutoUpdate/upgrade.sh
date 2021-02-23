@@ -58,7 +58,7 @@ GET_TARGET_INFO() {
         if [[ "${TARGET1}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
 	else
-		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
+		TARGET_PROFILE="${TARGET3}"
 	fi
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
 	if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
