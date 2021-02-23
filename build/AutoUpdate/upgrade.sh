@@ -6,9 +6,12 @@
 GET_TARGET_INFO() {
 	Home=${GITHUB_WORKSPACE}/openwrt
 	echo "Home Path: ${Home}"
+	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
-	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
+	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
+	[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
+	[[ -z "${Author}" ]] && Author="Unknown"
 	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
 	TARGET3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
@@ -17,6 +20,7 @@ GET_TARGET_INFO() {
 	else
 		TARGET_PROFILE="${TARGET3}"
 	fi
+	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
 	
 	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 		Lede_Version="18.06"
@@ -83,9 +87,6 @@ Diy_Part1() {
 
 Diy_Part2() {
 	GET_TARGET_INFO
-	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
-	[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
-	[[ -z "${Author}" ]] && Author="Unknown"
 	echo "Author: ${Author}"
 	echo "Openwrt Version: ${Openwrt_Version}"
 	echo "Router: ${TARGET_PROFILE}"
