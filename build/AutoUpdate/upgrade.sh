@@ -9,9 +9,12 @@ GET_TARGET_INFO() {
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
-	TARGET_1="-$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
-	TARGET_2="-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+	TARGET_1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
+	TARGET_2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
 	TARGET_3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
+	echo "TARGET_4=-$TARGET_1"
+	echo "TARGET_5=-$TARGET_2"
+	echo "TARGET_6=-$TARGET_3"
 	Author="${Author}"
 	Source="${Source}"
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
@@ -42,9 +45,9 @@ GET_TARGET_INFO() {
 			Firmware_sf="img"
 		fi
 		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-			U_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-squashfs-combined.img.gz"
+			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}-squashfs-combined.img.gz"
 		else
-			U_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-combined-squashfs.img.gz"
+			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}-combined-squashfs.img.gz"
 		fi
 	;;
 	esac
