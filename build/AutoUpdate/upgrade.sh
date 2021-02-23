@@ -7,6 +7,8 @@ GET_TARGET_INFO() {
 	Home=${GITHUB_WORKSPACE}/openwrt
 	echo "Home Path: ${Home}"
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
+	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
+	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 	Author="${Author}"
 	Source="${Source}"
         if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
@@ -43,8 +45,6 @@ GET_TARGET_INFO() {
 		Up_Firmware="${Updete_firmware}"
 		Firmware_sfx="${Extension}"
 	fi
-	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
-	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 }
 
 Diy_Part1() {
