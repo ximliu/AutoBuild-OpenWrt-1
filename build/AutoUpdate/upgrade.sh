@@ -34,18 +34,21 @@ GET_TARGET_INFO() {
 	x86-64)
 		grep "CONFIG_TARGET_IMAGES_GZIP=y" ${Home}/.config
 		if [[ ! $? -ne 0 ]];then
-			Firmware_sfx="img.gz"
+			Firmware_sf="img.gz"
 		else
-			Firmware_sfx="img"
+			Firmware_sf="img"
 		fi
 		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-			Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-combined.img.gz"
+			U_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-combined.img.gz"
 		else
-			Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-combined-squashfs.img.gz"
+			U_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-combined-squashfs.img.gz"
 		fi
 	;;
 	esac
-	if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+	if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
+		Up_Firmware="${U_Firmware}"
+		Firmware_sfx="${Firmware_sf}"
+	elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 		Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs.trx"
 		Firmware_sfx="trx"
 	elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
