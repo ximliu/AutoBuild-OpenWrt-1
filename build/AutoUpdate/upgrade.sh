@@ -9,12 +9,12 @@ GET_TARGET_INFO() {
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
-	TARGET_1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
-	TARGET_2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
-         grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > NAME1
-         [ -s NAME1 ] && echo "TARGET_6=-$(cat NAME1)"
-	TARGET_4="-${TARGET_1}"
-	TARGET_5="-${TARGET_2}"
+	echo "-$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" > NAME2
+	echo "-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> NAME2
+	echo "-$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')" >> NAME2
+	TARGET_4="$(awk 'NR==1' /NAME1)"
+	TARGET_5="$(awk 'NR==2' /NAME1)"
+	TARGET_6="$(awk 'NR==3' /NAME1)"
 	Author="${Author}"
 	Source="${Source}"
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
