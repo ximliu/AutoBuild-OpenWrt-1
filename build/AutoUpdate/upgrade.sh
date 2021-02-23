@@ -38,6 +38,11 @@ GET_TARGET_INFO() {
 		else
 			Firmware_sfx="img"
 		fi
+		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+			Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-combined.img.gz"
+		else
+			Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-combined-squashfs.img.gz"
+		fi
 	;;
 	esac
 	if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
