@@ -9,6 +9,9 @@ GET_TARGET_INFO() {
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
+	TARGET_1="-$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
+	TARGET_2="-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+	TARGET_3="-$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	Author="${Author}"
 	Source="${Source}"
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
@@ -23,7 +26,7 @@ GET_TARGET_INFO() {
 	fi
 	Openwrt_Version="${Lede_Version}-${Compile_Date}"
 	TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
-	TARGET_SUBTARGET="-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+	TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
         if [[ "${TARGET_BOARD}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
 	else
@@ -39,9 +42,9 @@ GET_TARGET_INFO() {
 			Firmware_sf="img"
 		fi
 		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-			U_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-combined.img.gz"
+			U_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-squashfs-combined.img.gz"
 		else
-			U_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-combined-squashfs.img.gz"
+			U_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-combined-squashfs.img.gz"
 		fi
 	;;
 	esac
@@ -49,10 +52,10 @@ GET_TARGET_INFO() {
 		Up_Firmware="${U_Firmware}"
 		Firmware_sfx="${Firmware_sf}"
 	elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-		Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs.trx"
+		Up_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-squashfs.trx"
 		Firmware_sfx="trx"
 	elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-		Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-sysupgrade.bin"
+		Up_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-squashfs-sysupgrade.bin"
 		Firmware_sfx="bin"
 	else
 		Up_Firmware="${Updete_firmware}"
