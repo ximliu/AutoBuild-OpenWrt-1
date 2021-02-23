@@ -12,7 +12,12 @@ GET_TARGET_INFO() {
 	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
 	TARGET3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
-        if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+        if [[ "${TARGET1}" == "x86" ]]; then
+		TARGET_PROFILE="x86-64"
+	else
+		TARGET_PROFILE="${TARGET3}"
+	fi
+	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 		Lede_Version="18.06"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
 			Up_Firmware="openwrt-x86-64-generic-squashfs-combined.img.gz"
