@@ -109,7 +109,7 @@ x86-64)
 esac
 Github_Download="${Github}/releases/download/AutoUpdate"
 Author="${Github##*com/}"
-Github_Tags="https://api.github.com/repos/${Author}/releases/latest"
+Github_Tags="https://api.github.com/repos/${Author}/releases/tags/AutoUpdate"
 cd /etc
 clear && echo "Openwrt-AutoUpdate Script ${Version}"
 if [[ -z "${Input_Option}" ]];then
@@ -190,13 +190,13 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${Source}-${CURRENT_Device}-R[0-9].+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
-GET_Version=$(echo ${GET_Firmware} | egrep -o "R[0-9].+-[0-9]+")
+GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${Source}-${CURRENT_Device}-[0-9].+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
+GET_Version=$(echo ${GET_Firmware} | egrep -o "[0-9].+-[0-9]+")
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
 	TIME && echo "云端固件版本获取失败!"
 	exit
 fi
-Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${Source}-${CURRENT_Device}-R[0-9].+-[0-9]+")"
+Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${Source}-${CURRENT_Device}-[0-9].+-[0-9]+")"
 Firmware="${GET_Firmware}"
 Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
