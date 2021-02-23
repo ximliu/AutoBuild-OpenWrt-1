@@ -32,10 +32,17 @@ GET_TARGET_INFO() {
 			Firmware_sfx="img"
 		fi
 	;;
-	*)
-		Firmware_sfx="${Extension}"
-	;;
 	esac
+	if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+		Up_Firmware="phicomm-k3-squashfs.trx"
+		Firmware_sfx="trx"
+	elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
+		Up_Firmware="${TARGET_PROFILE}-squashfs-sysupgrade.bin"
+		Firmware_sfx="bin"
+	else
+		Up_Firmware="${Updete_firmware}"
+		Firmware_sfx="${Extension}"
+	fi
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 }
