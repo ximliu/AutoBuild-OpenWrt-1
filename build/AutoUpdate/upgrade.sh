@@ -27,7 +27,7 @@ GET_TARGET_INFO() {
 			Up_Firmware="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
 			Firmware_sfx=".trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			Up_Firmware="${openwrt}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx=".bin"
 		else
 			Up_Firmware="${Updete_firmware}"
