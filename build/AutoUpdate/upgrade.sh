@@ -149,7 +149,7 @@ Diy_Part3() {
 	;;
 	*)
 		cd ${Home}
-		Default_Firmware="openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-sysupgrade.${Firmware_sfx}"
+		Default_Firmware="${Up_Firmware}"
 		AutoBuild_Firmware="${Source}-${TARGET_PROFILE}-${Openwrt_Version}.${Firmware_sfx}"
 		AutoBuild_Detail="${Source}-${TARGET_PROFILE}-${Openwrt_Version}.detail"
 		echo "Firmware: ${AutoBuild_Firmware}"
