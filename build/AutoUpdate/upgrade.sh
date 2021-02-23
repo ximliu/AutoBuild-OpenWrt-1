@@ -11,6 +11,11 @@ GET_TARGET_INFO() {
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 	Author="${Author}"
 	Source="${Source}"
+        if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
+		openwrt="immortalwrt"
+	else
+		openwrt="openwrt"
+	fi
         if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
 		Lede_Version="19.07"
 	else
@@ -36,10 +41,10 @@ GET_TARGET_INFO() {
 	;;
 	esac
 	if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-		Up_Firmware="phicomm-k3-squashfs.trx"
+		Up_Firmware=""${openwrt}"-${TARGET_BOARD}-${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs.trx"
 		Firmware_sfx="trx"
 	elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-		Up_Firmware="${TARGET_PROFILE}-squashfs-sysupgrade.bin"
+		Up_Firmware=""${openwrt}"-${TARGET_BOARD}-${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-sysupgrade.bin"
 		Firmware_sfx="bin"
 	else
 		Up_Firmware="${Updete_firmware}"
