@@ -32,11 +32,11 @@ GET_TARGET_INFO() {
 	case "${TARGET_PROFILE}" in
 	x86_64)
 		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
-		IMAGES_GZIP="# CONFIG_TARGET_IMAGES_GZIP is not set"
-		if [[ "${GZIP}" == "# CONFIG_TARGET_IMAGES_GZIP is not set" ]];then
-			Firmware_sfx="img"
-		else
+		IMAGES_GZIP="CONFIG_TARGET_IMAGES_GZIP=y"
+		if [[ "${GZIP}" == "${IMAGES_GZIP}" ]];then
 			Firmware_sfx="img.gz"
+		else
+			Firmware_sfx="img"
 		fi
 	;;
 	*)
