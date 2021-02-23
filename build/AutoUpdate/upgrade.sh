@@ -11,7 +11,7 @@ GET_TARGET_INFO() {
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 	echo "-$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" > ${Home}/NAME2
 	echo "-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> ${Home}/NAME2
-	echo "-$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')" >> ${Home}/NAME2
+	echo "-$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')-" >> ${Home}/NAME2
 	TARGET_4="$(awk 'NR==1' ${Home}/NAME2)"
 	TARGET_5="$(awk 'NR==2' ${Home}/NAME2)"
 	TARGET_6="$(awk 'NR==3' ${Home}/NAME2)"
@@ -45,9 +45,9 @@ GET_TARGET_INFO() {
 			Firmware_sf="img"
 		fi
 		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}-squashfs-combined.img.gz"
+			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}squashfs-combined.img.gz"
 		else
-			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}-combined-squashfs.img.gz"
+			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}combined-squashfs.img.gz"
 		fi
 	;;
 	esac
