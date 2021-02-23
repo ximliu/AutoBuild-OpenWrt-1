@@ -34,7 +34,6 @@ GET_TARGET_INFO() {
 		GZIP="$(grep "# CONFIG_TARGET_IMAGES_GZIP is not set" ${Home}/.config)"
 		IMAGES_GZIP="CONFIG_TARGET_IMAGES_GZIP=y"
 		if [[ "${GZIP}" -eq "${IMAGES_GZIP}" ]];then
-		if [[ ! $? -ne 0 ]];then
 			Firmware_sfx="img"
 		else
 			Firmware_sfx="img.gz"
