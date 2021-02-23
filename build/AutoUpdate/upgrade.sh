@@ -17,6 +17,7 @@ GET_TARGET_INFO() {
 	else
 		TARGET_PROFILE="${TARGET3}"
 	fi
+	
 	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 		Lede_Version="18.06"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
