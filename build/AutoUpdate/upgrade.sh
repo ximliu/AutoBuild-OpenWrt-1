@@ -12,10 +12,8 @@ GET_TARGET_INFO() {
 	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
 	TARGET3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
-	Author="${Author}"
-	Source="${Source}"
         if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-		openwrt="openwrt"
+		Lede_Version="18.06"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
 			GUJIAN="openwrt-x86-64-generic-squashfs-combined.img.gz"
 			HOUZHUI=".img.gz"
@@ -29,7 +27,7 @@ GET_TARGET_INFO() {
 	fi
         
 	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
-		openwrt="openwrt"
+		Lede_Version="19.07"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
 			GUJIAN="openwrt-x86-64-combined-squashfs.img.gz"
 			HOUZHUI=".img.gz"
@@ -43,7 +41,7 @@ GET_TARGET_INFO() {
 	fi
 	
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
-		openwrt="immortalwrt"
+		Lede_Version="18.06"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
 			GUJIAN="immortalwrt-x86-64-combined-squashfs.img.gz"
 			HOUZHUI=".img.gz"
@@ -63,16 +61,6 @@ GET_TARGET_INFO() {
 		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	fi
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
-	case "${TARGET_PROFILE}" in
-	x86-64)
-		grep "CONFIG_TARGET_IMAGES_GZIP=y" ${Home}/.config
-		if [[ ! $? -ne 0 ]];then
-			Firmware_sf="img.gz"
-		else
-			Firmware_sf="img"
-		fi
-	;;
-	esac
 	if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
 		Up_Firmware="${GUJIAN}"
 		Firmware_sfx="${HOUZHUI}"
