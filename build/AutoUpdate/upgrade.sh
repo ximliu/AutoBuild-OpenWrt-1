@@ -4,6 +4,17 @@
 # AutoBuild Functions
 
 GET_TARGET_INFO() {
+	Home=${GITHUB_WORKSPACE}/openwrt
+	echo "Home Path: ${Home}"
+	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
+	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
+	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
+	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
+	[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
+	[[ -z "${Author}" ]] && Author="Unknown"
+	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
+	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+	TARGET3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
         if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]]; then
 		Compile_Version="18.06"
 	elif [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]]; then
@@ -11,19 +22,8 @@ GET_TARGET_INFO() {
 	elif [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]]; then
 		Compile_Version="18.06"
 	fi
-	Home=${GITHUB_WORKSPACE}/openwrt
-	echo "Home Path: ${Home}"
-	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
-	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
-	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	Openwrt_Version="${Compile_Version}-${Compile_Date}"
-	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
-	[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
-	[[ -z "${Author}" ]] && Author="Unknown"
-	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
-	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
-	TARGET3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
-        if [[ "${TARGET1}" == "x86" ]]; then
+	if [[ "${TARGET1}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
 	else
 		TARGET_PROFILE="${TARGET3}"
