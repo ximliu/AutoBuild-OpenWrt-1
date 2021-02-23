@@ -23,7 +23,7 @@ GET_TARGET_INFO() {
 	fi
 	Openwrt_Version="${Lede_Version}-${Compile_Date}"
 	TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
-	TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+	TARGET_SUBTARGET="-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
         if [[ "${TARGET_BOARD}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
 	else
@@ -41,10 +41,10 @@ GET_TARGET_INFO() {
 	;;
 	esac
 	if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-		Up_Firmware=""${openwrt}"-${TARGET_BOARD}-${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs.trx"
+		Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs.trx"
 		Firmware_sfx="trx"
 	elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-		Up_Firmware=""${openwrt}"-${TARGET_BOARD}-${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-sysupgrade.bin"
+		Up_Firmware="${openwrt}-${TARGET_BOARD}${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-sysupgrade.bin"
 		Firmware_sfx="bin"
 	else
 		Up_Firmware="${Updete_firmware}"
@@ -69,6 +69,7 @@ Diy_Part2() {
 	echo "Router: ${TARGET_PROFILE}"
 	echo "Github: ${Github_Repo}"
 	echo "Source: ${Source}"
+	echo "Up_Firmware: ${Up_Firmware}"
 	echo "${Openwrt_Version}" > ${AutoBuild_Info}
 	echo "${Github_Repo}" >> ${AutoBuild_Info}
 	echo "${TARGET_PROFILE}" >> ${AutoBuild_Info}
