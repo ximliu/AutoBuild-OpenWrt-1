@@ -15,65 +15,55 @@ GET_TARGET_INFO() {
         if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 		Lede_Version="18.06"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-			GUJIAN="openwrt-x86-64-generic-squashfs-combined.img.gz"
-			HOUZHUI=".img.gz"
+			Up_Firmware="openwrt-x86-64-generic-squashfs-combined.img.gz"
+			Firmware_sfx=".img.gz"
 		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			GUJIAN="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
-			HOUZHUI=".trx"
+			Up_Firmware="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
+			Firmware_sfx=".trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			GUJIAN="${openwrt}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			HOUZHUI=".bin"
+			Up_Firmware="${openwrt}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			Firmware_sfx=".bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
 		fi
 	fi
         
 	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
 		Lede_Version="19.07"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-			GUJIAN="openwrt-x86-64-combined-squashfs.img.gz"
-			HOUZHUI=".img.gz"
+			Up_Firmware="openwrt-x86-64-combined-squashfs.img.gz"
+			Firmware_sfx=".img.gz"
 		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			GUJIAN="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
-			HOUZHUI=".trx"
+			Up_Firmware="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
+			Firmware_sfx=".trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			GUJIAN="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			HOUZHUI=".bin"
+			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			Firmware_sfx=".bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
 		fi
 	fi
 	
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
 		Lede_Version="18.06"
 		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-			GUJIAN="immortalwrt-x86-64-combined-squashfs.img.gz"
-			HOUZHUI=".img.gz"
+			Up_Firmware="immortalwrt-x86-64-combined-squashfs.img.gz"
+			Firmware_sfx=".img.gz"
 		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			GUJIAN="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
-			HOUZHUI=".trx"
+			Up_Firmware="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
+			Firmware_sfx=".trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			GUJIAN="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			HOUZHUI=".bin"
+			Up_Firmware="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			Firmware_sfx=".bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
 		fi
 	fi
 
 	Openwrt_Version="${Lede_Version}-${Compile_Date}"
-        if [[ "${TARGET1}" == "x86" ]]; then
-		TARGET_PROFILE="x86-64"
-	else
-		TARGET_PROFILE="${TARGET3}"
-	fi
-	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
-	if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-		Up_Firmware="${GUJIAN}"
-		Firmware_sfx="${HOUZHUI}"
-	elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-		Up_Firmware="${GUJIAN}"
-		Firmware_sfx="${HOUZHUI}"
-	elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-		Up_Firmware="${GUJIAN}"
-		Firmware_sfx="${HOUZHUI}"
-	else
-		Up_Firmware="${Updete_firmware}"
-		Firmware_sfx="${Extension}"
-	fi
 }
 
 Diy_Part1() {
