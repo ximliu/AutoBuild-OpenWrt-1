@@ -109,7 +109,7 @@ x86-64)
 esac
 Github_Download="${Github}/releases/download/AutoUpdate"
 Author="${Github##*com/}"
-Github_Tags="https://api.github.com/repos/${Author}/releases/tags/AutoUpdate"
+Github_Tags="https://api.github.com/repos/${Author}/releases/tags/update_Firmware"
 cd /etc
 clear && echo "Openwrt-AutoUpdate Script ${Version}"
 if [[ -z "${Input_Option}" ]];then
