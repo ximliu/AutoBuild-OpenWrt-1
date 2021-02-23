@@ -107,7 +107,7 @@ x86-64)
 	Detail_SFX=".detail"
 	Space_RQM=50
 esac
-Github_Download="${Github}/releases/download/AutoUpdate"
+Github_Download="${Github}/releases/download/update_Firmware"
 Author="${Github##*com/}"
 Github_Tags="https://api.github.com/repos/${Author}/releases/tags/update_Firmware"
 cd /etc
