@@ -12,9 +12,9 @@ GET_TARGET_INFO() {
 	TARGET_1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET_2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
 	TARGET_3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
-	TARGET_4=-"${TARGET_1}"
-	TARGET_5=-"${TARGET_2}"
-	TARGET_6=-"${TARGET_3}"
+	TARGET_4="$-{TARGET_1}"
+	TARGET_5="${-TARGET_2}"
+	TARGET_6="-${TARGET_3}"
 	Author="${Author}"
 	Source="${Source}"
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
