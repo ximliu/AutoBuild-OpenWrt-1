@@ -9,28 +9,55 @@ GET_TARGET_INFO() {
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
-	echo "-$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)" > ${Home}/NAME2
-	echo "-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)" >> ${Home}/NAME2
-	echo "-$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')-" >> ${Home}/NAME2
-	TARGET_4="$(awk 'NR==1' ${Home}/NAME2)"
-	TARGET_5="$(awk 'NR==2' ${Home}/NAME2)"
-	TARGET_6="$(awk 'NR==3' ${Home}/NAME2)"
+	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
+	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
+	TARGET3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	Author="${Author}"
 	Source="${Source}"
+        if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+		openwrt="openwrt"
+		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
+			GUJIAN="openwrt-x86-64-generic-squashfs-combined.img.gz"
+			HOUZHUI=".img.gz"
+		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+			GUJIAN="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
+			HOUZHUI=".trx"
+		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
+			GUJIAN="${openwrt}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			HOUZHUI=".bin"
+		fi
+	fi
+        
+	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
+		openwrt="openwrt"
+		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
+			GUJIAN="openwrt-x86-64-combined-squashfs.img.gz"
+			HOUZHUI=".img.gz"
+		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+			GUJIAN="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
+			HOUZHUI=".trx"
+		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
+			GUJIAN="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			HOUZHUI=".bin"
+		fi
+	fi
+	
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
 		openwrt="immortalwrt"
-	else
-		openwrt="openwrt"
+		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
+			GUJIAN="immortalwrt-x86-64-combined-squashfs.img.gz"
+			HOUZHUI=".img.gz"
+		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+			GUJIAN="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
+			HOUZHUI=".trx"
+		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
+			GUJIAN="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			HOUZHUI=".bin"
+		fi
 	fi
-        if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
-		Lede_Version="19.07"
-	else
-		Lede_Version="18.06"
-	fi
+
 	Openwrt_Version="${Lede_Version}-${Compile_Date}"
-	TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
-	TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
-        if [[ "${TARGET_BOARD}" == "x86" ]]; then
+        if [[ "${TARGET1}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
 	else
 		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
@@ -44,22 +71,17 @@ GET_TARGET_INFO() {
 		else
 			Firmware_sf="img"
 		fi
-		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}squashfs-combined.img.gz"
-		else
-			U_Firmware="${openwrt}${TARGET_4}${TARGET_5}${TARGET_6}combined-squashfs.img.gz"
-		fi
 	;;
 	esac
 	if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-		Up_Firmware="${U_Firmware}"
-		Firmware_sfx="${Firmware_sf}"
+		Up_Firmware="${GUJIAN}"
+		Firmware_sfx="${HOUZHUI}"
 	elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-		Up_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-squashfs.trx"
-		Firmware_sfx="trx"
+		Up_Firmware="${GUJIAN}"
+		Firmware_sfx="${HOUZHUI}"
 	elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-		Up_Firmware="${openwrt}${TARGET_1}${TARGET_2}${TARGET_3}-squashfs-sysupgrade.bin"
-		Firmware_sfx="bin"
+		Up_Firmware="${GUJIAN}"
+		Firmware_sfx="${HOUZHUI}"
 	else
 		Up_Firmware="${Updete_firmware}"
 		Firmware_sfx="${Extension}"
