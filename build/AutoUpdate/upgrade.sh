@@ -4,11 +4,19 @@
 # AutoBuild Functions
 
 GET_TARGET_INFO() {
+        if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]]; then
+		Compile_Version="18.06"
+	elif [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]]; then
+		Compile_Version="19.07"
+	elif [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]]; then
+		Compile_Version="18.06"
+	fi
 	Home=${GITHUB_WORKSPACE}/openwrt
 	echo "Home Path: ${Home}"
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
+	Openwrt_Version="${Compile_Version}-${Compile_Date}"
 	AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
 	[[ -z "${AutoUpdate_Version}" ]] && AutoUpdate_Version="Unknown"
 	[[ -z "${Author}" ]] && Author="Unknown"
@@ -21,59 +29,19 @@ GET_TARGET_INFO() {
 		TARGET_PROFILE="${TARGET3}"
 	fi
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
-	
-	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-		Lede_Version="18.06"
-		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-			Up_Firmware="openwrt-x86-64-generic-squashfs-combined.img.gz"
-			Firmware_sfx=".img.gz"
-		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			Up_Firmware="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
-			Firmware_sfx=".trx"
-		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			Firmware_sfx=".bin"
+	case "${TARGET_PROFILE}" in
+	x86_64)
+		grep "CONFIG_TARGET_IMAGES_GZIP=y" ${Home}/.config
+		if [[ ! $? -ne 0 ]];then
+			Firmware_sfx="img.gz"
 		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
+			Firmware_sfx="img"
 		fi
-	fi
-        
-	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
-		Lede_Version="19.07"
-		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-			Up_Firmware="openwrt-x86-64-combined-squashfs.img.gz"
-			Firmware_sfx=".img.gz"
-		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			Up_Firmware="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
-			Firmware_sfx=".trx"
-		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			Firmware_sfx=".bin"
-		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
-		fi
-	fi
-	
-        if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
-		Lede_Version="18.06"
-		if [[ "${TARGET_PROFILE}" == "x86-64" ]]; then
-			Up_Firmware="immortalwrt-x86-64-combined-squashfs.img.gz"
-			Firmware_sfx=".img.gz"
-		elif [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			Up_Firmware="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
-			Firmware_sfx=".trx"
-		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			Up_Firmware="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			Firmware_sfx=".bin"
-		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
-		fi
-	fi
-
-	Openwrt_Version="${Lede_Version}-${Compile_Date}"
+	;;
+	*)
+		Firmware_sfx="${Extension}"
+	;;
+	esac
 }
 
 Diy_Part1() {
@@ -92,7 +60,6 @@ Diy_Part2() {
 	echo "Router: ${TARGET_PROFILE}"
 	echo "Github: ${Github_Repo}"
 	echo "Source: ${Source}"
-	echo "Up_Firmware: ${Up_Firmware}"
 	echo "${Openwrt_Version}" > ${AutoBuild_Info}
 	echo "${Github_Repo}" >> ${AutoBuild_Info}
 	echo "${TARGET_PROFILE}" >> ${AutoBuild_Info}
@@ -127,7 +94,7 @@ Diy_Part3() {
 				_SHA256=$(sha256sum ${EFI_Firmware} | cut -d ' ' -f1)
 				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
 				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
-				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
+				cp -a ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
 				echo "UEFI Firmware is detected !"
 			fi
 		fi
@@ -149,7 +116,7 @@ Diy_Part3() {
 				_SHA256=$(sha256sum ${EFI_Firmware} | cut -d ' ' -f1)
 				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
 				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
-				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
+				cp -a ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
 				echo "UEFI Firmware is detected !"
 			fi
 		fi
@@ -171,7 +138,7 @@ Diy_Part3() {
 				_SHA256=$(sha256sum ${EFI_Firmware} | cut -d ' ' -f1)
 				touch ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
 				echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.detail
-				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
+				cp -a ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
 				echo "UEFI Firmware is detected !"
 			fi
 		fi
@@ -182,10 +149,10 @@ Diy_Part3() {
 		AutoBuild_Firmware="${Source}-${TARGET_PROFILE}-${Openwrt_Version}.${Firmware_sfx}"
 		AutoBuild_Detail="${Source}-${TARGET_PROFILE}-${Openwrt_Version}.detail"
 		echo "Firmware: ${AutoBuild_Firmware}"
-		cp -a bin/targets/*/*/*"${Default_Firmware}" bin/Firmware/"${AutoBuild_Firmware}"
-		_MD5="$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)"
-		_SHA256="$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)"
-		echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/"${AutoBuild_Detail}"
+		cp -a ${Firmware_Path}/${Default_Firmware} bin/Firmware/${AutoBuild_Firmware}
+		_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
+		_SHA256=$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
+		echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/${AutoBuild_Detail}
 	;;
 	esac
 	cd ${Home}
