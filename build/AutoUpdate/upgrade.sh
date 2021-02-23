@@ -11,7 +11,7 @@ GET_TARGET_INFO() {
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
 	TARGET_1="-$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET_2="-$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
-	TARGET_3="-$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
+	TARGET_3="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 	Author="${Author}"
 	Source="${Source}"
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
