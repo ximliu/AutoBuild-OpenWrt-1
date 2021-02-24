@@ -7,11 +7,11 @@ GET_TARGET_INFO() {
 	echo "Home Path: ${Home}"
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
         if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
-		Lede_Version="19.07"
+		Comp_Version="19.07"
 	else
-		Lede_Version="18.06"
+		Comp_Version="18.06"
 	fi
-	Openwrt_Version="${Lede_Version}-${Compile_Date}"
+	Openwrt_Version="${Comp_Version}-${Compile_Date}"
 	TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
         if [[ "${TARGET_BOARD}" == "x86" ]]; then
