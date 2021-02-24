@@ -43,7 +43,7 @@ List_Info() {
 	echo "当前设备:	${CURRENT_Device}"
 	echo "默认设备:	${DEFAULT_Device}"
 	echo "当前固件版本:	${CURRENT_Version}"
-	echo "固件名称:	${Source}-${CURRENT_Device}-${CURRENT_Version}${Firmware_SFX}"
+	echo "固件名称:	openwrt-${CURRENT_Version}${Firmware_SFX}"
 	echo "Github 地址:	${Github}"
 	echo "解析 API 地址:	${Github_Tags}"
 	echo "固件下载地址:	${Github_Download}"
@@ -190,13 +190,14 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${Source}-${CURRENT_Device}-[0-9].+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
-GET_Version=$(echo ${GET_Firmware} | egrep -o "[0-9].+-[0-9]+")
+GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "openwrt-[0-9]+.[0-9]+.[0-9]+.[0-9]+.[a-z]+.[a-z]+${Firmware_SFX}" | awk 'END {print}')
+GET_Ver="${GET_Firmware#*openwrt-}"
+GET_Version="${GET_Ver}"
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
 	TIME && echo "云端固件版本获取失败!"
 	exit
 fi
-Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${Source}-${CURRENT_Device}-[0-9].+-[0-9]+")"
+Firmware_Info="$(echo ${GET_Firmware} | egrep -o "openwrt-[0-9].+-[0-9]+")"
 Firmware="${GET_Firmware}"
 Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
