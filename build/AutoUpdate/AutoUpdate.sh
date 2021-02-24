@@ -42,7 +42,7 @@ List_Info() {
 	echo "固件下载位置:	/tmp/Downloads"
 	echo "当前设备:	${CURRENT_Device}"
 	echo "默认设备:	${DEFAULT_Device}"
-	echo "当前固件版本:	${CURRENT_Version}"
+	echo "当前固件版本:	${CURRENT_Version}${BOOT_Type}"
 	echo "固件名称:	${CURRENT_COMP1}-${CURRENT_COMP2}-${CURRENT_Device}-${CURRENT_Version}${Firmware_SFX}"
 	echo "Github 地址:	${Github}"
 	echo "解析 API 地址:	${Github_Tags}"
@@ -219,7 +219,7 @@ Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
 echo "设备名称: ${CURRENT_Device}"
 echo "固件格式: ${Detail_SFX}"
-echo -e "\n当前固件版本: ${CURRENT_Version}"
+echo -e "\n当前固件版本: ${CURRENT_Version}${BOOT_Type}"
 echo "云端固件版本: ${GET_Version}"
 if [[ ! ${Force_Update} == 1 ]];then
 	if [[ ${CURRENT_Version} == ${GET_Version} ]];then
