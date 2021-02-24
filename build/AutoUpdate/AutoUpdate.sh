@@ -191,7 +191,22 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${CURRENT_COMP1}-${CURRENT_COMP2}-${CURRENT_Device}-[0-9].+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
+case ${CURRENT_Device} in
+x86-64)
+	if [ -d /sys/firmware/efi ];then
+		Firmware_SFX="-UEFI.${Firmware_Type}"
+		BOOT_Type="-UEFI"
+	else
+		Firmware_SFX="-Legacy.${Firmware_Type}"
+		BOOT_Type="-Legacy"
+	fi
+;;
+*)
+	Firmware_SFX=".${Firmware_Type}"
+	BOOT_Type=""
+;;
+esac
+GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${CURRENT_COMP1}-${CURRENT_COMP2}-${CURRENT_Device}-[0-9]+.[0-9]+.[0-9]+.[0-9]+${Firmware_SFX}" | awk 'END {print}')"
 GET_Ver="${GET_Firmware#*${CURRENT_COMP1}-}"
 GET_Version="${GET_Ver}"
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
