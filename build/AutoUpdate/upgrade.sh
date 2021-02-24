@@ -8,7 +8,20 @@ GET_TARGET_INFO() {
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	TARGET_BOARD="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET_SUBTARGET="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
-        if [[ "${TARGET_BOARD}" == "x86" ]]; then
+        if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+		COMP1="openwrt"
+		COMP2="lede"
+		COMP3="18.06"
+	elif [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
+		COMP1="openwrt"
+		COMP2="lienol"
+		COMP3="19.07"
+	elif [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
+		COMP1="immortalwrt"
+		COMP2="project"
+		COMP3="18.06"
+	fi
+	if [[ "${TARGET_BOARD}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
 	else
 		TARGET_PROFILE="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
@@ -29,7 +42,9 @@ GET_TARGET_INFO() {
 	esac
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
-	Openwrt_Version="${Source}-${TARGET_PROFILE}-${Compile_Date}"
+	Openwrt_Version="${COMP3}-${Compile_Date}"
+	
+	${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}
 }
 Diy_Part1() {
 	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
@@ -69,7 +84,7 @@ Diy_Part3() {
 			cd ${Firmware_Path}
 			Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined.${Firmware_sfx}
 			EFI_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined-efi.${Firmware_sfx}
-			AutoBuild_Firmware="openwrt-${Openwrt_Version}"
+			AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}"
 			if [ -f "${Legacy_Firmware}" ];then
 				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
 				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
@@ -91,7 +106,7 @@ Diy_Part3() {
 			cd ${Firmware_Path}
 			Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs.${Firmware_sfx}
 			EFI_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs-efi.${Firmware_sfx}
-			AutoBuild_Firmware="openwrt-${Openwrt_Version}"
+			AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}"
 			if [ -f "${Legacy_Firmware}" ];then
 				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
 				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
@@ -113,7 +128,7 @@ Diy_Part3() {
 			cd ${Firmware_Path}
 			Legacy_Firmware=immortalwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs.${Firmware_sfx}
 			EFI_Firmware=immortalwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-uefi-gpt-squashfs.${Firmware_sfx}
-			AutoBuild_Firmware="openwrt-${Openwrt_Version}"
+			AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}"
 			if [ -f "${Legacy_Firmware}" ];then
 				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
 				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
@@ -135,8 +150,8 @@ Diy_Part3() {
 	*)
 		cd ${Home}
 		Default_Firmware="openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-sysupgrade.${Firmware_sfx}"
-		AutoBuild_Firmware="openwrt-${Openwrt_Version}.${Firmware_sfx}"
-		AutoBuild_Detail="openwrt-${Openwrt_Version}.detail"
+		AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}.${Firmware_sfx}"
+		AutoBuild_Detail="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}.detail"
 		echo "Firmware: ${AutoBuild_Firmware}"
 		cp -a ${Firmware_Path}/${Default_Firmware} bin/Firmware/${AutoBuild_Firmware}
 		_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
