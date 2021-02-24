@@ -42,7 +42,7 @@ List_Info() {
 	echo "固件下载位置:	/tmp/Downloads"
 	echo "当前设备:	${CURRENT_Device}"
 	echo "默认设备:	${DEFAULT_Device}"
-	echo "当前固件版本:	${CURRENT_Version}${BOOT_Type}"
+	echo "当前固件版本:	${CURRENT_Version}"
 	echo "固件名称:	${CURRENT_COMP1}-${CURRENT_COMP2}-${CURRENT_Device}-${CURRENT_Version}${Firmware_SFX}"
 	echo "Github 地址:	${Github}"
 	echo "解析 API 地址:	${Github_Tags}"
@@ -191,21 +191,6 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-case ${CURRENT_Device} in
-x86-64)
-	if [ -d /sys/firmware/efi ];then
-		Firmware_SFX="-UEFI.${Firmware_Type}"
-		BOOT_Type="-UEFI"
-	else
-		Firmware_SFX="-Legacy.${Firmware_Type}"
-		BOOT_Type="-Legacy"
-	fi
-;;
-*)
-	Firmware_SFX=".${Firmware_Type}"
-	BOOT_Type=""
-;;
-esac
 GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${CURRENT_COMP1}-${CURRENT_COMP2}-${CURRENT_Device}-[0-9]+.[0-9]+.[0-9]+.[0-9]+${Firmware_SFX}" | awk 'END {print}')"
 GET_Ver="${GET_Firmware#*${CURRENT_COMP1}-}"
 GET_Version="${GET_Ver}"
@@ -219,7 +204,7 @@ Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
 echo "设备名称: ${CURRENT_Device}"
 echo "固件格式: ${Detail_SFX}"
-echo -e "\n当前固件版本: ${CURRENT_Version}${BOOT_Type}"
+echo -e "\n当前固件版本: ${CURRENT_Version}"
 echo "云端固件版本: ${GET_Version}"
 if [[ ! ${Force_Update} == 1 ]];then
 	if [[ ${CURRENT_Version} == ${GET_Version} ]];then
