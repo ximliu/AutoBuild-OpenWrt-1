@@ -11,15 +11,12 @@ GET_TARGET_INFO() {
         if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 		COMP1="openwrt"
 		COMP2="lede"
-		COMP3="18.06"
 	elif [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
 		COMP1="openwrt"
 		COMP2="lienol"
-		COMP3="19.07"
 	elif [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
 		COMP1="immortalwrt"
 		COMP2="project"
-		COMP3="18.06"
 	fi
 	if [[ "${TARGET_BOARD}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
@@ -42,7 +39,7 @@ GET_TARGET_INFO() {
 	esac
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info=${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info
-	Openwrt_Version="${COMP3}-${Compile_Date}"
+	Openwrt_Version="${TARGET_PROFILE}-${Compile_Date}"
 }
 Diy_Part1() {
 	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
