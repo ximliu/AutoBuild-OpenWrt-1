@@ -96,6 +96,7 @@ Diy_Part2() {
 	echo "Router: ${TARGET_PROFILE}"
 	echo "Github: ${Github_Repo}"
 	echo "Source: ${COMP2}"
+	echo "Up_Firmware: ${Up_Firmware}"
 	echo "${Openwrt_Version}" > ${AutoBuild_Info}
 	echo "${Github_Repo}" >> ${AutoBuild_Info}
 	echo "${TARGET_PROFILE}" >> ${AutoBuild_Info}
