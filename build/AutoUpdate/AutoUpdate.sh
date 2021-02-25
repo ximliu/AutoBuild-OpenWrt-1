@@ -42,8 +42,8 @@ List_Info() {
 	echo "固件下载位置:	/tmp/Downloads"
 	echo "当前设备:	${CURRENT_Device}"
 	echo "默认设备:	${DEFAULT_Device}"
-	echo "当前固件版本:	${CURRENT_V}-${CURRENT_Version}${BOOT_Type}"
-	echo "固件名称:	AutoBuild-${CURRENT_Device}-${CURRENT_Version}${Firmware_SFX}"
+	echo "当前固件版本:	${CURRENT_ZUOZHE}-${CURRENT_Version}${BOOT_Type}"
+	echo "固件名称:	${CURRENT_OPMZ}-${CURRENT_ZUOZHE}-${CURRENT_Version}${Firmware_SFX}"
 	echo "Github 地址:	${Github}"
 	echo "解析 API 地址:	${Github_Tags}"
 	echo "固件下载地址:	${Github_Download}"
@@ -73,7 +73,8 @@ Shell_Helper() {
 opkg list | awk '{print $1}' > /tmp/Package_list
 Input_Option="$1"
 Input_Other="$2"
-CURRENT_V="$(awk 'NR==6' /etc/openwrt_info)"
+CURRENT_OPMZ="$(awk 'NR==5' /etc/openwrt_info)"
+CURRENT_ZUOZHE="$(awk 'NR==6' /etc/openwrt_info)"
 CURRENT_Version="$(awk 'NR==1' /etc/openwrt_info)"
 Github="$(awk 'NR==2' /etc/openwrt_info)"
 DEFAULT_Device="$(awk 'NR==3' /etc/openwrt_info)"
@@ -190,19 +191,19 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "AutoBuild-${CURRENT_V}-${DEFAULT_Device}+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
-GET_Version=$(echo ${GET_Firmware} | egrep -o "${CURRENT_V}-${DEFAULT_Device}+-[0-9]+${BOOT_Type}")
+GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${CURRENT_OPMZ}-${CURRENT_ZUOZHE}-${DEFAULT_Device}+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
+GET_Version=$(echo ${GET_Firmware} | egrep -o "${CURRENT_ZUOZHE}-${DEFAULT_Device}+-[0-9]+${BOOT_Type}")
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
 	TIME && echo "云端固件版本获取失败!"
 	exit
 fi
-Firmware_Info="$(echo ${GET_Firmware} | egrep -o "AutoBuild-${CURRENT_V}-${DEFAULT_Device}+-[0-9]+")"
+Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${CURRENT_OPMZ}-${CURRENT_ZUOZHE}-${DEFAULT_Device}+-[0-9]+")"
 Firmware="${GET_Firmware}"
 Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
 echo "设备名称: ${CURRENT_Device}"
 echo "固件格式: ${Firmware_SFX}"
-echo -e "\n当前固件版本: ${CURRENT_V}-${CURRENT_Version}${BOOT_Type}"
+echo -e "\n当前固件版本: ${CURRENT_ZUOZHE}-${CURRENT_Version}${BOOT_Type}"
 echo "云端固件版本: ${GET_Version}"
 if [[ ! ${Force_Update} == 1 ]];then
 	if [[ ${CURRENT_Version} == ${GET_Version} ]];then
