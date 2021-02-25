@@ -73,7 +73,7 @@ Shell_Helper() {
 opkg list | awk '{print $1}' > /tmp/Package_list
 Input_Option="$1"
 Input_Other="$2"
-CURRENT_Version2="$(awk 'NR==1' /etc/openwrt_info)"
+CURRENT_Ver="$(awk 'NR==1' /etc/openwrt_info)"
 Github="$(awk 'NR==2' /etc/openwrt_info)"
 DEFAULT_Device="$(awk 'NR==3' /etc/openwrt_info)"
 Firmware_Type="$(awk 'NR==4' /etc/openwrt_info)"
@@ -108,7 +108,7 @@ x86-64)
 	Detail_SFX=".detail"
 	Space_RQM=50
 esac
-CURRENT_Version="${Firmware_zuozhe}-${CURRENT_Version2}${BOOT_Type}"
+CURRENT_Version="${Firmware_zuozhe}-${CURRENT_Ver}${BOOT_Type}"
 Github_Download="${Github}/releases/download/update_Firmware"
 Author="${Github##*com/}"
 Github_Tags="https://api.github.com/repos/${Author}/releases/tags/update_Firmware"
