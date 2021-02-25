@@ -42,13 +42,13 @@ List_Info() {
 	echo "固件下载位置:	/tmp/Downloads"
 	echo "当前设备:	${CURRENT_Device}"
 	echo "默认设备:	${DEFAULT_Device}"
-	echo "当前固件版本:	${CURRENT_ZUOZHE}-${CURRENT_Version}${BOOT_Type}"
-	echo "固件名称:	${CURRENT_OPMZ}-${CURRENT_ZUOZHE}-${CURRENT_Version}${Firmware_SFX}"
+	echo "当前固件版本:	${CURRENT_Version}"
+	echo "固件名称:	${Firmware_opmz}-${CURRENT_Version}${Firmware_SFX}"
 	echo "Github 地址:	${Github}"
 	echo "解析 API 地址:	${Github_Tags}"
 	echo "固件下载地址:	${Github_Download}"
 	echo "作者/仓库:	${Author}"
-	if [[ ${DEFAULT_Device} == "x86_64" ]];then
+	if [[ ${DEFAULT_Device} == "x86-64" ]];then
 		echo "EFI 引导: 	${EFI_Boot}"
 		echo "固件压缩:	${Compressed_x86}"
 	fi
@@ -73,16 +73,16 @@ Shell_Helper() {
 opkg list | awk '{print $1}' > /tmp/Package_list
 Input_Option="$1"
 Input_Other="$2"
-CURRENT_OPMZ="$(awk 'NR==5' /etc/openwrt_info)"
-CURRENT_ZUOZHE="$(awk 'NR==6' /etc/openwrt_info)"
-CURRENT_Version="$(awk 'NR==1' /etc/openwrt_info)"
+CURRENT_Version2="$(awk 'NR==1' /etc/openwrt_info)"
 Github="$(awk 'NR==2' /etc/openwrt_info)"
 DEFAULT_Device="$(awk 'NR==3' /etc/openwrt_info)"
 Firmware_Type="$(awk 'NR==4' /etc/openwrt_info)"
+Firmware_opmz="$(awk 'NR==5' /etc/openwrt_info)"
+Firmware_zuozhe="$(awk 'NR==6' /etc/openwrt_info)"
 TMP_Available="$(df -m | grep "/tmp" | awk '{print $4}' | awk 'NR==1')"
 Overlay_Available="$(df -h | grep ":/overlay" | awk '{print $4}' | awk 'NR==1')"
 case ${DEFAULT_Device} in
-x86_64)
+x86-64)
 	[[ -z ${Firmware_Type} ]] && Firmware_Type="img"
 	if [[ "${Firmware_Type}" == "img.gz" ]];then
 		Compressed_x86="1"
@@ -98,7 +98,7 @@ x86_64)
 	fi
 	Firmware_SFX="${BOOT_Type}.${Firmware_Type}"
 	Detail_SFX="${BOOT_Type}.detail"
-	CURRENT_Device="x86_64"
+	CURRENT_Device="x86-64"
 	Space_RQM=500
 ;;
 *)
@@ -108,6 +108,7 @@ x86_64)
 	Detail_SFX=".detail"
 	Space_RQM=50
 esac
+CURRENT_Version="${Firmware_zuozhe}-${CURRENT_Version2}${BOOT_Type}"
 Github_Download="${Github}/releases/download/update_Firmware"
 Author="${Github##*com/}"
 Github_Tags="https://api.github.com/repos/${Author}/releases/tags/update_Firmware"
@@ -191,19 +192,19 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${CURRENT_OPMZ}-${CURRENT_ZUOZHE}-[a-z]+.+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
-GET_Version=$(echo ${GET_Firmware} | egrep -o "${CURRENT_ZUOZHE}-[a-z]+.+-[0-9]+${BOOT_Type}")
+GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${Firmware_opmz}-${Firmware_zuozhe}-[a-z].+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
+GET_Version=$(echo ${GET_Firmware} | egrep -o "${Firmware_zuozhe}-[a-z].+-[0-9]+${BOOT_Type}")
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
 	TIME && echo "云端固件版本获取失败!"
 	exit
 fi
-Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${CURRENT_OPMZ}-${CURRENT_ZUOZHE}-[a-z]+.+-[0-9]+")"
+Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${Firmware_opmz}-${Firmware_zuozhe}-[a-z].+-[0-9]+")"
 Firmware="${GET_Firmware}"
 Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
 echo "设备名称: ${CURRENT_Device}"
 echo "固件格式: ${Firmware_SFX}"
-echo -e "\n当前固件版本: ${CURRENT_ZUOZHE}-${CURRENT_Version}${BOOT_Type}"
+echo -e "\n当前固件版本: ${CURRENT_Version}"
 echo "云端固件版本: ${GET_Version}"
 if [[ ! ${Force_Update} == 1 ]];then
 	if [[ ${CURRENT_Version} == ${GET_Version} ]];then
