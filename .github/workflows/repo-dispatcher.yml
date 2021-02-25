@@ -1,53 +1,56 @@
-#=================================================
+#
+# Copyright (c) 2019-2021 P3TERX <https://p3terx.com>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
 # https://github.com/P3TERX/Actions-OpenWrt
-# Description: Build OpenWrt using GitHub Actions
-# Lisence: MIT
-# Author: P3TERX
-# Blog: https://p3terx.com
-#=================================================
+# File: .github/workflows/update-checker.yml
+# Description: Source code update checker
+#
 
-name: Repo Dispatcher
-
-on: 
-  # push: 
-  #   branches:
-  #     - master
-  # schedule:
-  #   - cron: 30 13 * * 6
-  workflow_dispatch:
-    inputs:
-      ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
+name: Update Checker
 
 env:
-  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
-  TZ: Asia/Shanghai
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+
+on:
+  workflow_dispatch:
+#  schedule:
+#    - cron: 0 */18 * * *
 
 jobs:
-  build:
-    runs-on: Ubuntu-20.04
-    steps:
-    - name: Cancel Previous Runs
-      uses: styfle/cancel-workflow-action@0.8.0
-      with:
-        access_token: ${{ github.token }}
+  check:
+    runs-on: ubuntu-latest
 
-    - name: Trigger Packages Update
+    steps:
+
+    - name: Get Commit Hash
+      id: getHash
       run: |
-        sudo timedatectl set-timezone "$TZ"
-        if [ ${{ github.event.inputs.ssh }} == 'true' ]; then
-          echo "SSH=ssh" >> $GITHUB_ENV
-        fi
-        curl -X POST https://api.github.com/repos/281677160/openwrt-package/dispatches \
-        -H "Accept: application/vnd.github.everest-preview+json" \
-        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-        --data '{"event_type": "update"}'
-    - name: Trigger Compile
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
+        echo "::set-output name=commitHash::$(git rev-parse HEAD)"
+    - name: Compare Commit Hash
+      id: cacheHash
+      uses: actions/cache@v2
+      with:
+        path: .commitHash
+        key: HEAD-${{ steps.getHash.outputs.commitHash }}
+
+    - name: Save New Commit Hash
+      if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
-        curl \
-        -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
-        -H "Accept: application/vnd.github.everest-preview+json" \
-        -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-        -d '{"event_type": "x86_64 ${{ env.SSH }}", "client_payload": {"target": "Lede_x86_64"}}'
+        echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
+    - name: Trigger build
+      if: steps.cacheHash.outputs.cache-hit != 'true'
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+        event-type: Source Code Update
+
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 1
+        keep_minimum_runs: 1
