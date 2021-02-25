@@ -191,7 +191,7 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware=$(cat /tmp/Github_Tags | egrep -o "${Firmware_opmz}-[a-z].+-[0-9]+${Firmware_SFX}" | awk 'END {print}')
+GET_Firmware="$(cat /tmp/Github_Tags | egrep -o "${Firmware_opmz}-[a-z].+-[0-9]+${Firmware_SFX}" | awk 'END {print}')"
 GET_Ver="${GET_Firmware#*${Firmware_opmz}-}"
 GET_Version=$(echo ${GET_Ver} | egrep -o "[a-z].+-[0-9]+${BOOT_Type}")
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
