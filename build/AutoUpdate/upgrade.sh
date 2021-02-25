@@ -80,7 +80,7 @@ Diy_Part3() {
 			cd ${Firmware_Path}
 			Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined.${Firmware_sfx}
 			EFI_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-generic-squashfs-combined-efi.${Firmware_sfx}
-			AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}"
+			AutoBuild_Firmware="${COMP1}-${Openwrt_Version}"
 			if [ -f "${Legacy_Firmware}" ];then
 				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
 				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
@@ -102,7 +102,7 @@ Diy_Part3() {
 			cd ${Firmware_Path}
 			Legacy_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs.${Firmware_sfx}
 			EFI_Firmware=openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs-efi.${Firmware_sfx}
-			AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}"
+			AutoBuild_Firmware="${COMP1}-${Openwrt_Version}"
 			if [ -f "${Legacy_Firmware}" ];then
 				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
 				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
@@ -124,7 +124,7 @@ Diy_Part3() {
 			cd ${Firmware_Path}
 			Legacy_Firmware=immortalwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-combined-squashfs.${Firmware_sfx}
 			EFI_Firmware=immortalwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-uefi-gpt-squashfs.${Firmware_sfx}
-			AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}"
+			AutoBuild_Firmware="${COMP1}-${Openwrt_Version}"
 			if [ -f "${Legacy_Firmware}" ];then
 				_MD5=$(md5sum ${Legacy_Firmware} | cut -d ' ' -f1)
 				_SHA256=$(sha256sum ${Legacy_Firmware} | cut -d ' ' -f1)
@@ -146,8 +146,8 @@ Diy_Part3() {
 	*)
 		cd ${Home}
 		Default_Firmware="openwrt-${TARGET_BOARD}-${TARGET_SUBTARGET}-${TARGET_PROFILE}-squashfs-sysupgrade.${Firmware_sfx}"
-		AutoBuild_Firmware="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}.${Firmware_sfx}"
-		AutoBuild_Detail="${COMP1}-${COMP2}-${TARGET_PROFILE}-${Openwrt_Version}.detail"
+		AutoBuild_Firmware="${COMP1}-${Openwrt_Version}.${Firmware_sfx}"
+		AutoBuild_Detail="${COMP1}-${Openwrt_Version}.detail"
 		echo "Firmware: ${AutoBuild_Firmware}"
 		cp -a ${Firmware_Path}/${Default_Firmware} bin/Firmware/${AutoBuild_Firmware}
 		_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
