@@ -42,7 +42,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [Lede_openwrt,Lienol_openwrt,Project_openwrt]
+        target: ["${{ github.event.client_payload.target }}"]
 
      # [Lede_openwrt]
 
