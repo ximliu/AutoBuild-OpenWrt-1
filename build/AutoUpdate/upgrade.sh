@@ -5,7 +5,8 @@
 GET_TARGET_INFO() {
 	Home=${GITHUB_WORKSPACE}/openwrt
 	echo "Home Path: ${Home}"
-	TARGET11="$(TZ=UTC-8 date "+%Y.%m.%d")"
+	Up_Firmware="${Updete_firmware}"
+	Firmware_sfx="${Extension}"
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
@@ -46,9 +47,6 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="${COMP1}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
 		fi
 	fi
         
@@ -59,9 +57,6 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="${COMP1}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
 		fi
 	fi
 	
@@ -72,9 +67,6 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="${COMP1}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
 		fi
 	fi
 }
