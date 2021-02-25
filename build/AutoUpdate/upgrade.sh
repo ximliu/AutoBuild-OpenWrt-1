@@ -5,6 +5,7 @@
 GET_TARGET_INFO() {
 	Home=${GITHUB_WORKSPACE}/openwrt
 	echo "Home Path: ${Home}"
+	TARGET11="$(TZ=UTC-8 date "+%Y.%m.%d")"
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
@@ -37,7 +38,7 @@ GET_TARGET_INFO() {
 	esac
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
-	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${Compile_Date}"
+	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${TARGET11}"
 	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="${COMP1}-bcm53xx-generic-phicomm-k3-squashfs.trx"
