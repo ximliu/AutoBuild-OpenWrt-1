@@ -52,7 +52,7 @@ List_Info() {
 		echo "EFI 引导: 	${EFI_Boot}"
 		echo "固件压缩:	${Compressed_x86}"
 	fi
-	echo "固件格式:	${Firmware_SFX}"
+	echo "固件格式:	${Firmware_GESHI}"
 	exit
 }
 
@@ -91,11 +91,14 @@ x86-64)
 	if [ -d /sys/firmware/efi ];then
 		EFI_Boot="1"
 		BOOT_Type="-UEFI"
+		GESHI_Type="UEFI"
 	else
 		EFI_Boot="0"
 		BOOT_Type="-Legacy"
+		GESHI_Type="Legacy"
 	fi
 	Firmware_SFX="${BOOT_Type}.${Firmware_Type}"
+	Firmware_GESHI="${GESHI_Type}.${Firmware_Type}"
 	Detail_SFX="${BOOT_Type}.detail"
 	CURRENT_Device="x86-64"
 	Space_RQM=500
@@ -203,7 +206,7 @@ Firmware="${GET_Firmware}"
 Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
 echo "设备名称: ${CURRENT_Device}"
-echo "固件格式: ${Firmware_SFX}"
+echo "固件格式: ${Firmware_GESHI}"
 echo -e "\n当前固件版本: ${CURRENT_Ver}"
 echo "云端固件版本: ${GET_Version}"
 if [[ ! ${Force_Update} == 1 ]];then
