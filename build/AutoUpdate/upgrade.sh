@@ -13,12 +13,12 @@ GET_TARGET_INFO() {
 	https://github.com/coolsnowwolf/lede)
 		COMP1="openwrt"
 		COMP2="lede"
-	"${REPO_URL}" in
-	https://github.com/Lienol/openwrt)
+	;;
+	"https://github.com/Lienol/openwrt") 
 		COMP1="openwrt"
 		COMP2="lienol"
-	"${REPO_URL}" in
-	https://github.com/immortalwrt/immortalwrt)
+	;;
+	"https://github.com/immortalwrt/immortalwrt") 
 		COMP1="immortalwrt"
 		COMP2="project"
 	;;
