@@ -37,7 +37,7 @@ GET_TARGET_INFO() {
 	fi
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
-	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${TARGET11}"
+	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${Compile_Date}"
 	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
