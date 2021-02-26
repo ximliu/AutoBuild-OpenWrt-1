@@ -171,7 +171,7 @@ if [[ ! "${Force_Update}" == "1" ]] && [[ ! "${AutoUpdate_Mode}" == "1" ]];then
 	grep "curl" /tmp/Package_list > /dev/null 2>&1
 	if [[ ! $? -ne 0 ]];then
 		Google_Check=$(curl -I -s --connect-timeout 5 www.google.com -w %{http_code} | tail -n1)
-		[ ! "$Google_Check" == 200 ] && TIME && echo "Google 连接失败,可能导致固件下载速度缓慢!"
+		[ ! "$Google_Check" == 200 ] && TIME && echo "梯子翻墙失败,可能导致固件下载速度缓慢!"
 	fi
 fi
 Install_Pkg wget
@@ -250,7 +250,7 @@ if [[ ! "${GET_MD5}" == "${CURRENT_MD5}" ]];then
 	TIME && echo -e "MD5 对比失败,请检查网络后重试!"
 	exit
 else
-	TIME && echo -e "MD5 对比通过!"
+	TIME && echo -e "MD5 对比成功!"
 fi
 if [[ ${Compressed_x86} == 1 ]];then
 	TIME && echo "检测到固件为 [.gz] 压缩格式,开始解压固件..."
