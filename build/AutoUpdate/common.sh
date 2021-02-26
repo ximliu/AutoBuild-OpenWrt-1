@@ -6,8 +6,6 @@ Diy_all() {
 echo "all"
 svn co https://github.com/jerrykuku/luci-theme-argon/branches/18.06 package/luci-theme-argon
 svn co https://github.com/jerrykuku/luci-app-argon-config/trunk package/luci-app-argon-config
-svn co https://github.com/immortalwrt/packages/trunk/net/adguardhome package/adguardhome
-svn co https://github.com/immortalwrt/immortalwrt/trunk/package/ctcgfw/luci-app-adguardhome package/luci-app-adguardhome
 }
 
 # 全脚本源码通用diy2.sh文件
