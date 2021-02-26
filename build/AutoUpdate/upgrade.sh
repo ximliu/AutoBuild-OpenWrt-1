@@ -25,55 +25,67 @@ GET_TARGET_INFO() {
 		TARGET_PROFILE="${TARGET3}"
 	fi
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
-	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
+	
+	case "${TARGET_PROFILE}" in
+	x86-64)
 		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
 		if [[ "${GZIP}" == "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img.gz"
-		elif [[ "${GZIP}" != "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
+		else
 			Firmware_sfx="img"
 		fi
-	else
+	;;
+	*)
 		Firmware_sfx="${Extension}"
-	fi
+	;;
+	esac
+	
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
 	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${Compile_Date}"
-	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+	
+	case "${REPO_URL}" in
+	https://github.com/coolsnowwolf/lede)
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
+	;;
+	*)
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
-		fi
-	fi
-	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
+	;;
+	esac
+	case "${REPO_URL}" in
+	https://github.com/Lienol/openwrt)
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
+	;;
+	*)
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
-		fi
-	fi
-        if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
+	;;
+	esac
+	case "${REPO_URL}" in
+	https://github.com/immortalwrt/immortalwrt)
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
+	;;
+	*)
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
-		fi
-	fi
+	;;
+	esac
 }
 Diy_Part1() {
 	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
