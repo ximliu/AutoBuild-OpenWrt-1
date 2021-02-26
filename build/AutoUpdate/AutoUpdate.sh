@@ -103,7 +103,7 @@ x86-64)
 *)
 	CURRENT_Device="$(jsonfilter -e '@.model.id' < /etc/board.json | tr ',' '_')"
 	Firmware_SFX=".${Firmware_Type}"
-	[[ -z ${Firmware_SFX} ]] && Firmware_SFX=".bin"
+	[[ -z ${Firmware_SFX} ]] && Firmware_SFX=".${Firmware_Type}"
 	Detail_SFX=".detail"
 	Space_RQM=50
 esac
