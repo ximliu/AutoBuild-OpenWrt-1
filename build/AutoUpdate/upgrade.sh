@@ -25,14 +25,6 @@ GET_TARGET_INFO() {
 		TARGET_PROFILE="${TARGET3}"
 	fi
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
-	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
-		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
-		if [[ "${GZIP}" == "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
-			Firmware_sfx="img.gz"
-		elif [[ "${GZIP}" != "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
-			Firmware_sfx="img"
-		fi
-	fi
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
 	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${Compile_Date}"
@@ -70,6 +62,14 @@ GET_TARGET_INFO() {
 		else
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
+		fi
+	fi
+	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
+		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
+		if [[ "${GZIP}" == "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
+			Firmware_sfx="img.gz"
+		elif [[ "${GZIP}" != "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
+			Firmware_sfx="img"
 		fi
 	fi
 }
