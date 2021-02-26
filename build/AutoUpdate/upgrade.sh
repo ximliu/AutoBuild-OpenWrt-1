@@ -109,7 +109,6 @@ Diy_Part3() {
 	Firmware_Path="bin/targets/${TARGET1}/${TARGET2}"
 	Mkdir bin/Firmware
 	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
-		
 		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 			cd ${Firmware_Path}
 			Legacy_Firmware="${COMP1}-${TARGET1}-${TARGET2}-generic-squashfs-combined.${Firmware_sfx}"
@@ -132,7 +131,6 @@ Diy_Part3() {
 				echo "UEFI Firmware is detected !"
 			fi
 		fi
-		
 		if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
 			cd ${Firmware_Path}
 			Legacy_Firmware="${COMP1}-${TARGET1}-${TARGET2}-combined-squashfs.${Firmware_sfx}"
@@ -155,7 +153,6 @@ Diy_Part3() {
 				echo "UEFI Firmware is detected !"
 			fi
 		fi
-		
 		if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
 			cd ${Firmware_Path}
 			Legacy_Firmware="${COMP1}-${TARGET1}-${TARGET2}-combined-squashfs.${Firmware_sfx}"
@@ -177,20 +174,22 @@ Diy_Part3() {
 				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
 				echo "UEFI Firmware is detected !"
 			fi
-		fi	
+		fi
+	else
+		cd ${Home}
+		Default_Firmware="${Up_Firmware}"
+		AutoBuild_Firmware="${COMP1}-${Openwrt_Version}.${Firmware_sfx}"
+		AutoBuild_Detail="${COMP1}-${Openwrt_Version}.detail"
+		echo "Firmware: ${AutoBuild_Firmware}"
+		cp -a ${Firmware_Path}/${Default_Firmware} bin/Firmware/${AutoBuild_Firmware}
+		_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
+		_SHA256=$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
+		echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/${AutoBuild_Detail}
+		cd ${Home}
+		echo "Actions Avaliable: $(df -h | grep "/dev/root" | awk '{printf $4}')"
 	fi
 	
-	cd ${Home}
-	Default_Firmware="${Up_Firmware}"
-	AutoBuild_Firmware="${COMP1}-${Openwrt_Version}.${Firmware_sfx}"
-	AutoBuild_Detail="${COMP1}-${Openwrt_Version}.detail"
-	echo "Firmware: ${AutoBuild_Firmware}"
-	cp -a ${Firmware_Path}/${Default_Firmware} bin/Firmware/${AutoBuild_Firmware}
-	_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
-	_SHA256=$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
-	echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/${AutoBuild_Detail}
-	cd ${Home}
-	echo "Actions Avaliable: $(df -h | grep "/dev/root" | awk '{printf $4}')"
+
 }
 Mkdir() {
 	_DIR=${1}
