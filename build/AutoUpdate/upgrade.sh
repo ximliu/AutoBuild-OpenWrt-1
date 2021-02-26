@@ -32,8 +32,6 @@ GET_TARGET_INFO() {
 		elif [[ "${GZIP}" != "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img"
 		fi
-	else
-		Firmware_sfx="${Extension}"
 	fi
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
