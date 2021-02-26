@@ -185,12 +185,11 @@ Diy_Part3() {
 		_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
 		_SHA256=$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
 		echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/${AutoBuild_Detail}
-		cd ${Home}
-		echo "Actions Avaliable: $(df -h | grep "/dev/root" | awk '{printf $4}')"
 	fi
-	
-
+	cd ${Home}
+	echo "Actions Avaliable: $(df -h | grep "/dev/root" | awk '{printf $4}')"
 }
+
 Mkdir() {
 	_DIR=${1}
 	if [ ! -d "${_DIR}" ];then
