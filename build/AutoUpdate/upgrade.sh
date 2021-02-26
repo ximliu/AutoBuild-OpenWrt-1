@@ -35,9 +35,6 @@ GET_TARGET_INFO() {
 			Firmware_sfx="img"
 		fi
 	;;
-	*)
-		Firmware_sfx="${Extension}"
-	;;
 	esac
 	
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
