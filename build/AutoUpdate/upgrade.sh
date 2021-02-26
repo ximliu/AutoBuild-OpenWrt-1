@@ -71,14 +71,16 @@ GET_TARGET_INFO() {
 		fi
 	;;
 	esac
-	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
+	case "${TARGET_PROFILE}" in
+	x86-64)
 		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
 		if [[ "${GZIP}" == "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img.gz"
 		elif [[ "${GZIP}" != "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img"
 		fi
-	fi
+	;;
+	esac
 }
 Diy_Part1() {
 	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
