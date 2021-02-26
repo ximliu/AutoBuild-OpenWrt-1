@@ -19,7 +19,7 @@ GET_TARGET_INFO() {
 		COMP1="immortalwrt"
 		COMP2="project"
 	fi
-	if [[ "${TARGET_BOARD}" == "x86" ]]; then
+	if [[ "${TARGET1}" == "x86" ]]; then
 		TARGET_PROFILE="x86-64"
 	else
 		TARGET_PROFILE="${TARGET3}"
