@@ -62,7 +62,6 @@ GET_TARGET_INFO() {
 			Firmware_sfx="${Extension}"
 		fi
 	fi
-	
         if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
