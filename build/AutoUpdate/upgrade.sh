@@ -5,8 +5,6 @@
 GET_TARGET_INFO() {
 	Home=${GITHUB_WORKSPACE}/openwrt
 	echo "Home Path: ${Home}"
-	Up_Firmware="${Updete_firmware}"
-	Firmware_sfx="${Extension}"
 	[ -f ${GITHUB_WORKSPACE}/Openwrt.info ] && . ${GITHUB_WORKSPACE}/Openwrt.info
 	TARGET1="$(awk -F '[="]+' '/TARGET_BOARD/{print $2}' .config)"
 	TARGET2="$(awk -F '[="]+' '/TARGET_SUBTARGET/{print $2}' .config)"
@@ -38,35 +36,6 @@ GET_TARGET_INFO() {
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
 	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${TARGET11}"
-	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
-		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			Up_Firmware="${COMP1}-bcm53xx-generic-phicomm-k3-squashfs.trx"
-			Firmware_sfx="trx"
-		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			Up_Firmware="${COMP1}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			Firmware_sfx="bin"
-		fi
-	fi
-        
-	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
-		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			Up_Firmware="${COMP1}-bcm53xx-phicomm-k3-squashfs.trx"
-			Firmware_sfx="trx"
-		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			Up_Firmware="${COMP1}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			Firmware_sfx="bin"
-		fi
-	fi
-	
-        if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
-		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
-			Up_Firmware="${COMP1}-bcm53xx-phicomm-k3-squashfs.trx"
-			Firmware_sfx="trx"
-		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
-			Up_Firmware="${COMP1}-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
-			Firmware_sfx="bin"
-		fi
-	fi
 }
 Diy_Part1() {
 	sed -i '/luci-app-autoupdate/d' .config > /dev/null 2>&1
@@ -87,7 +56,6 @@ Diy_Part2() {
 	echo "Router: ${TARGET_PROFILE}"
 	echo "Github: ${Github_Repo}"
 	echo "Source: ${COMP2}"
-	echo "Up_Firmware: ${Up_Firmware}"
 	echo "${Openwrt_Version}" > ${AutoBuild_Info}
 	echo "${Github_Repo}" >> ${AutoBuild_Info}
 	echo "${TARGET_PROFILE}" >> ${AutoBuild_Info}
@@ -167,18 +135,56 @@ Diy_Part3() {
 				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
 				echo "UEFI Firmware is detected !"
 			fi
-		fi
-	else
-		cd ${Home}
-		Default_Firmware="${Up_Firmware}"
-		AutoBuild_Firmware="${COMP1}-${Openwrt_Version}.${Firmware_sfx}"
-		AutoBuild_Detail="${COMP1}-${Openwrt_Version}.detail"
-		echo "Firmware: ${AutoBuild_Firmware}"
-		cp -a ${Firmware_Path}/${Default_Firmware} bin/Firmware/${AutoBuild_Firmware}
-		_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
-		_SHA256=$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
-		echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/${AutoBuild_Detail}
+		fi	
 	fi
+	
+	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+			Up_Firmware="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
+			Firmware_sfx=".trx"
+		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
+			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			Firmware_sfx=".bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
+		fi
+	fi
+        
+	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
+		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+			Up_Firmware="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
+			Firmware_sfx=".trx"
+		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
+			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			Firmware_sfx=".bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
+		fi
+	fi
+	
+        if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
+		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
+			Up_Firmware="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
+			Firmware_sfx=".trx"
+		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
+			Up_Firmware="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
+			Firmware_sfx=".bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
+		fi
+	fi
+	cd ${Home}
+	Default_Firmware="${Up_Firmware}"
+	AutoBuild_Firmware="${COMP1}-${Openwrt_Version}.${Firmware_sfx}"
+	AutoBuild_Detail="${COMP1}-${Openwrt_Version}.detail"
+	echo "Firmware: ${AutoBuild_Firmware}"
+	cp -a ${Firmware_Path}/${Default_Firmware} bin/Firmware/${AutoBuild_Firmware}
+	_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
+	_SHA256=$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
+	echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/${AutoBuild_Detail}
 	cd ${Home}
 	echo "Actions Avaliable: $(df -h | grep "/dev/root" | awk '{printf $4}')"
 }
