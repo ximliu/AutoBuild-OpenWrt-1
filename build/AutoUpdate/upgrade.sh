@@ -52,6 +52,7 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
+		fi	
 	;;
 	*)
 			Up_Firmware="${Updete_firmware}"
@@ -66,6 +67,7 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
+		fi
 	;;
 	*)
 			Up_Firmware="${Updete_firmware}"
@@ -80,6 +82,7 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
+		fi
 	;;
 	*)
 			Up_Firmware="${Updete_firmware}"
@@ -186,6 +189,7 @@ Diy_Part3() {
 				cp ${EFI_Firmware} ${Home}/bin/Firmware/${AutoBuild_Firmware}-UEFI.${Firmware_sfx}
 				echo "UEFI Firmware is detected !"
 			fi
+		fi
 	;;
 	*)
 		cd ${Home}
