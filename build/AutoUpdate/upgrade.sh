@@ -41,6 +41,9 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
 		fi
 	;;
 	"https://github.com/Lienol/openwrt")
@@ -50,6 +53,9 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
+		else
+			Up_Firmware="${Updete_firmware}"
+			Firmware_sfx="${Extension}"
 		fi
 	;;
 	"https://github.com/immortalwrt/immortalwrt")
@@ -59,12 +65,10 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		fi
-	
-	;;
-	*)
+		else
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
+		fi
 	;;
 	esac
 	case "${TARGET_PROFILE}" in
