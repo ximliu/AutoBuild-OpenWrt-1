@@ -6,6 +6,8 @@ Diy_all() {
 echo "all"
 svn co https://github.com/jerrykuku/luci-theme-argon/branches/18.06 package/luci-theme-argon
 svn co https://github.com/jerrykuku/luci-app-argon-config/trunk package/luci-app-argon-config
+svn co https://github.com/immortalwrt/packages/trunk/net/adguardhome
+svn co https://github.com/immortalwrt/immortalwrt/trunk/package/ctcgfw/luci-app-adguardhome
 }
 
 # 全脚本源码通用diy2.sh文件
@@ -29,6 +31,7 @@ mkdir -p files/usr/bin/AdGuardHome/data
 
 Diy_lede() {
 echo "LEDE源码自定义1"
+rm -rf package/lean/luci-theme-argon
 
 git clone https://github.com/fw876/helloworld package/luci-app-ssr-plus
 
