@@ -68,7 +68,7 @@ GET_TARGET_INFO() {
 	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
 		if [[ "${GZIP}" == "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img.gz"
-		else
+		elif [[ "${GZIP}" != "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img"
 		fi
 	fi
