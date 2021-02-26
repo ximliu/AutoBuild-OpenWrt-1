@@ -171,7 +171,7 @@ jobs:
         if [ -n "$(ls -A "build/${{matrix.target}}/diy" 2>/dev/null)" ]; then
           cp -Rf build/${{matrix.target}}/diy/* ./
         fi
-        [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
+        [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv $CONFIG_FILE .config
         if [ ${{matrix.target}} != "openwrt" ]; then
           if [ "${REGULAR_UPDATE}" == "true" ]; then
             echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
