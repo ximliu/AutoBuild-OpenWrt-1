@@ -41,38 +41,30 @@ GET_TARGET_INFO() {
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
 		fi
 	;;
-	esac
-	case "${REPO_URL}" in
-	https://github.com/Lienol/openwrt)
+	"https://github.com/Lienol/openwrt")
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="openwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
-			Up_Firmware="${Updete_firmware}"
-			Firmware_sfx="${Extension}"
 		fi
 	;;
-	esac
-	case "${REPO_URL}" in
-	https://github.com/immortalwrt/immortalwrt)
+	"https://github.com/immortalwrt/immortalwrt")
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
 		elif [[ "${TARGET_PROFILE}" =~ (xiaomi_mir3g|d-team_newifi-d2) ]]; then
 			Up_Firmware="immortalwrt-${TARGET1}-${TARGET2}-${TARGET3}-squashfs-sysupgrade.bin"
 			Firmware_sfx="bin"
-		else
+		fi
+	
+	;;
+	*)
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
-		fi
 	;;
 	esac
 	case "${TARGET_PROFILE}" in
