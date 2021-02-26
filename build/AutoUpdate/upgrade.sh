@@ -27,16 +27,14 @@ GET_TARGET_INFO() {
 		TARGET_PROFILE="${TARGET3}"
 	fi
 	[[ -z "${TARGET_PROFILE}" ]] && TARGET_PROFILE="Unknown"
-	case "${TARGET_PROFILE}" in
-	x86-64)
+	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
 		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
 		if [[ "${GZIP}" == "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img.gz"
-		else
+		elif [[ "${GZIP}" != "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
 			Firmware_sfx="img"
 		fi
-	;;
-	esac
+	fi
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
 	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${TARGET11}"
@@ -103,8 +101,7 @@ Diy_Part3() {
 	GET_TARGET_INFO
 	Firmware_Path="bin/targets/${TARGET1}/${TARGET2}"
 	Mkdir bin/Firmware
-	case "${TARGET_PROFILE}" in
-	x86-64)
+	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
 		if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
 			cd ${Firmware_Path}
 			Legacy_Firmware="${COMP1}-${TARGET1}-${TARGET2}-generic-squashfs-combined.${Firmware_sfx}"
@@ -171,8 +168,7 @@ Diy_Part3() {
 				echo "UEFI Firmware is detected !"
 			fi
 		fi
-	;;
-	*)
+	else
 		cd ${Home}
 		Default_Firmware="${Up_Firmware}"
 		AutoBuild_Firmware="${COMP1}-${Openwrt_Version}.${Firmware_sfx}"
@@ -182,8 +178,7 @@ Diy_Part3() {
 		_MD5=$(md5sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
 		_SHA256=$(sha256sum bin/Firmware/${AutoBuild_Firmware} | cut -d ' ' -f1)
 		echo -e "\nMD5:${_MD5}\nSHA256:${_SHA256}" > bin/Firmware/${AutoBuild_Detail}
-	;;
-	esac
+	fi
 	cd ${Home}
 	echo "Actions Avaliable: $(df -h | grep "/dev/root" | awk '{printf $4}')"
 }
