@@ -28,7 +28,9 @@ GET_TARGET_INFO() {
 	Github_Repo="$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)"
 	AutoBuild_Info="${GITHUB_WORKSPACE}/openwrt/package/base-files/files/etc/openwrt_info"
 	Openwrt_Version="${COMP2}-${TARGET_PROFILE}-${Compile_Date}"
-	if [[ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]];then
+
+	case "${REPO_URL}" in
+	https://github.com/coolsnowwolf/lede)
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="openwrt-bcm53xx-generic-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
@@ -39,8 +41,10 @@ GET_TARGET_INFO() {
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
 		fi
-	fi
-	if [[ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]];then
+	;;
+	esac
+	case "${REPO_URL}" in
+	https://github.com/Lienol/openwrt)
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="openwrt-bcm53xx-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
@@ -51,8 +55,10 @@ GET_TARGET_INFO() {
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
 		fi
-	fi
-        if [[ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]];then
+	;;
+	esac
+	case "${REPO_URL}" in
+	https://github.com/immortalwrt/immortalwrt)
 		if [[ "${TARGET_PROFILE}" == "phicomm-k3" ]]; then
 			Up_Firmware="immortalwrt-bcm53xx-phicomm-k3-squashfs.trx"
 			Firmware_sfx="trx"
@@ -63,7 +69,8 @@ GET_TARGET_INFO() {
 			Up_Firmware="${Updete_firmware}"
 			Firmware_sfx="${Extension}"
 		fi
-	fi
+	;;
+	esac
 	if [[ "${TARGET_PROFILE}" == "x86-64" ]];then
 		GZIP="$(grep "CONFIG_TARGET_IMAGES_GZIP" ${Home}/.config)"
 		if [[ "${GZIP}" == "CONFIG_TARGET_IMAGES_GZIP=y" ]];then
