@@ -143,11 +143,13 @@ jobs:
           echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
         ./$DIY_P2_SH
-        if [ -n "$(ls -A "/patches" 2>/dev/null)" ]; then
-          patch -p1 < "./patches/* ./"
+        if [ -n "$(ls -A "./patches" 2>/dev/null)" ]; then
+          find "./patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 -E --forward --no-backup-if-mismatch"
         fi
-        echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-        source common/upgrade.sh && Diy_Part1
+        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+          echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
+          source common/upgrade.sh && Diy_Part1
+        fi
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
