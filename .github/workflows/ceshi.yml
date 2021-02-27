@@ -143,7 +143,7 @@ jobs:
           echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
         ./$DIY_P2_SH
-        find "patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
+        patch -p1 < "${GITHUB_WORKSPACE}/patches/* ./"
         echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
         source common/upgrade.sh && Diy_Part1
      
