@@ -137,6 +137,7 @@ https://github.com/coolsnowwolf/lede)
 ;;
 esac
 BANBEN1="$(awk 'NR==1' package/base-files/files/etc/openwrt_info)"
+AutoUpdate_Version=$(awk 'NR==6' package/base-files/files/bin/AutoUpdate.sh | awk -F '[="]+' '/Version/{print $2}')
 [[ -z "${TARGET_PRO}" ]] && TARGET_PRO="Unknown"
 echo "编译源码: ${COMP2}"
 echo "源码链接: ${REPO_URL}"
@@ -176,6 +177,7 @@ else
 	echo "微信通知: 关闭"
 fi
 if [[ ${REGULAR_UPDATE} == "true" ]]; then
+	echo "插件版本: ${AutoUpdate_Version}"
 	echo ""
 	echo "把定时自动更新插件编译进固件: 开启"
 	echo "《您现在编译的固件版本：${BANBEN1}》"
