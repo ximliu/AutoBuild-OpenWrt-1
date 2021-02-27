@@ -108,7 +108,7 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        git clone -b main --single-branch https://github.com/281677160/Custom ${GITHUB_WORKSPACE}/build/${{matrix.target}}
+        git clone -b main --single-branch https://github.com/281677160/Custom ${GITHUB_WORKSPACE}/build/${{matrix.target}}/
         chmod 777 ${GITHUB_WORKSPACE}/build
         cp -Rf ${GITHUB_WORKSPACE}/build openwrt
     
