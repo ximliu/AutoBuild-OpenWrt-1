@@ -134,17 +134,14 @@ jobs:
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
           source common/common.sh && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
-          echo "Source=Lede" >> $GITHUB_ENV
-          echo "ZUOZHE=lean" >> $GITHUB_ENV
+          echo "ZUOZHE=Lean's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
           source common/common.sh && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
-          echo "Source=Lienol" >> $GITHUB_ENV
-          echo "ZUOZHE=lienol" >> $GITHUB_ENV
+          echo "ZUOZHE=Lienol's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
           source common/common.sh && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
-          echo "Source=Project" >> $GITHUB_ENV
           echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
         if [ -f "build/${{matrix.target}}/$DIY_P2_SH" ]; then
