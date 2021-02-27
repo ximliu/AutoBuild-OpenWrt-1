@@ -101,13 +101,13 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         cp -Rf ${GITHUB_WORKSPACE}/build/${{matrix.target}}/* ./openwrt
         chmod +x $GITHUB_WORKSPACE/openwrt/* ./
+        mkdir -p openwrt/common
+        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/{upgrade.sh,common.sh} ./openwrt/common
+        chmod +x ./openwrt/common/* ./
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
-        mkdir -p common
-        mv ${GITHUB_WORKSPACE}/build/AutoUpdate/{upgrade.sh,common.sh} common
-        chmod +x common/* ./
         source common/common.sh && Diy_notice
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         git clone https://github.com/281677160/luci-app-autoupdate package/luci-app-autoupdate
