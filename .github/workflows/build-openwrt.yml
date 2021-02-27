@@ -166,6 +166,7 @@ jobs:
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
           source common/upgrade.sh && Diy_Part1
+          echo "BANBEN=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
@@ -181,7 +182,6 @@ jobs:
         make defconfig
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           source common/upgrade.sh && Diy_Part2
-          echo "log1=$(awk 'NR==5' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         else
           source common/common.sh && Diy_xinxi
         fi
