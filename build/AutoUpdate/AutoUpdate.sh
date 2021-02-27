@@ -196,13 +196,13 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware="$(cat /tmp/Github_Tags | egrep -o "${Firmware_COMP1}-${Firmware_COMP2}+.[a-zA-Z0-9_-]+.[0-9]+${Firmware_SFX}" | awk 'END {print}')"
-GET_Version="$(echo ${GET_Firmware} | egrep -o "${Firmware_COMP2}+.[a-zA-Z0-9_-]+.[0-9]+${BOOT_Type}")"
+GET_Firmware="$(cat /tmp/Github_Tags | egrep -o "${Firmware_COMP1}-${Firmware_COMP2}-${DEFAULT_Device}-[0-9]+.*?[0-9]+${Firmware_SFX}" | awk 'END {print}')"
+GET_Version="$(echo ${GET_Firmware} | egrep -o "${Firmware_COMP2}-${DEFAULT_Device}-[0-9]+.*?[0-9]+${BOOT_Type}")"
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
 	TIME && echo "云端固件版本获取失败!"
 	exit
 fi
-Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${Firmware_COMP1}-${Firmware_COMP2}+.[a-zA-Z0-9_-]+.[0-9]+")"
+Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${Firmware_COMP1}-${Firmware_COMP2}-${DEFAULT_Device}-[0-9]+.*?[0-9]+")"
 Firmware="${GET_Firmware}"
 Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
