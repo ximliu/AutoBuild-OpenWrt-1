@@ -106,6 +106,7 @@ Diy_Part2() {
 	echo "Writting Type: ${Firmware_sfx} to ${AutoBuild_Info} ..."
 	echo "${Firmware_sfx}" >> ${AutoBuild_Info}
 	echo "${COMP1}" >> ${AutoBuild_Info}
+	echo "${COMP2}" >> ${AutoBuild_Info}
 	
 }
 Diy_Part3() {
