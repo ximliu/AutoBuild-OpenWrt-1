@@ -122,9 +122,23 @@ elif [[ ${Modelfile} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
 else
 	TARGET_PRO="$(egrep -o "CONFIG_TARGET.*DEVICE.*=y" .config | sed -r 's/.*DEVICE_(.*)=y/\1/')"
 fi
+case "${REPO_URL}" in
+https://github.com/coolsnowwolf/lede)
+	COMP1="openwrt"
+	COMP2="lede"
+;;
+"https://github.com/Lienol/openwrt") 
+	COMP1="openwrt"
+	COMP2="lienol"
+;;
+"https://github.com/immortalwrt/immortalwrt") 
+	COMP1="immortalwrt"
+	COMP2="project"
+;;
+esac
 BANBEN1="$(awk 'NR==1' package/base-files/files/etc/openwrt_info)"
 [[ -z "${TARGET_PRO}" ]] && TARGET_PRO="Unknown"
-echo "编译源码: ${Source}"
+echo "编译源码: ${COMP2}"
 echo "源码链接: ${REPO_URL}"
 echo "源码分支: ${REPO_BRANCH}"
 echo "源码作者: ${ZUOZHE}"
