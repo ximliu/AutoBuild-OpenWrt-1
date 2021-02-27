@@ -13,14 +13,6 @@ on:
         description: 'SSH远程'
         required: false
         default: 'ssh-actions'
-      wxtz:
-        description: '微信通知'
-        required: false
-        default: 'wxtz-actions'
-      release:
-        description: '发布固件'
-        required: false
-        default: 'release-actions'
 
 #定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
 #  schedule:
@@ -107,10 +99,11 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        cd openwrt
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
-        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
         mkdir -p common
         mv build/AutoUpdate/{upgrade.sh,common.sh} common
@@ -125,14 +118,12 @@ jobs:
       run: |
         cd openwrt
         source common/common.sh && Diy_all
-        if [ ${{matrix.target}} != "openwrt" ]; then
-          if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-            source common/common.sh && Diy_lede
-          elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-            source common/common.sh && Diy_lienol
-          elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-            source common/common.sh && Diy_immortalwrt
-          fi
+        if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
+          source common/common.sh && Diy_lede
+        elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
+          source common/common.sh && Diy_lienol
+        elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
+          source common/common.sh && Diy_immortalwrt
         fi
         if [ -f "build/${{matrix.target}}/$DIY_P1_SH" ]; then
           chmod +x build/${{matrix.target}}/$DIY_P1_SH
@@ -172,11 +163,9 @@ jobs:
           cp -Rf build/${{matrix.target}}/diy/* ./
         fi
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
-        if [ ${{matrix.target}} != "openwrt" ]; then
-          if [ "${REGULAR_UPDATE}" == "true" ]; then
-            echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-            source common/upgrade.sh && Diy_Part1
-          fi
+        if [ "${REGULAR_UPDATE}" == "true" ]; then
+          echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
+          source common/upgrade.sh && Diy_Part1
         fi
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
@@ -190,15 +179,11 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        if [ ${{matrix.target}} != "openwrt" ]; then
-          if [ "${REGULAR_UPDATE}" == "true" ]; then
-            source common/upgrade.sh && Diy_Part2
-            echo "log1=$(awk 'NR==5' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-          else
-            source common/common.sh && Diy_xinxi
-          fi
+        if [ "${REGULAR_UPDATE}" == "true" ]; then
+          source common/upgrade.sh && Diy_Part2
+          echo "log1=$(awk 'NR==5' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        else
+          source common/common.sh && Diy_xinxi
         fi
     
     - name: 下载软件包
@@ -258,10 +243,8 @@ jobs:
       id: organizer
       run: |
         cd openwrt
-        if [[ ${{matrix.target}} != "openwrt" ]]; then
-          if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-            source common/upgrade.sh && Diy_Part3
-          fi  
+        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+          source common/upgrade.sh && Diy_Part3
         fi
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
@@ -297,18 +280,14 @@ jobs:
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
       run: |
         curl -fsSL git.io/file-transfer | sh
-        cowurl=$(./transfer cow --block 2621440 -s --no-progress ${FIRMWARE})
-        cowurl=$(echo $cowurl | grep -o -E "https[^ ]*")
-        echo "COWURL=$cowurl" >> $GITHUB_ENV
-        echo "Download Link: ${{ env.EMOJI }} $cowurl ${{ env.EMOJI }} 🚀"
+        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
+        echo "::warning file=奶牛快传（${{matrix.target}}）::$(cat cowtransfer.log | grep https)"
         curl -fsSL git.io/file-transfer | sh
-        wetrans=$(./transfer wet -s -p 16 --no-progress ${FIRMWARE})
-        wetrans=$(echo $wetrans | grep -o -E "https[^ ]*")
-        echo "WETRANS=$wetrans" >> $GITHUB_ENV
-        echo "Download Link: ${{ env.EMOJI }} $wetrans ${{ env.EMOJI }} 🚀"
+        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+        echo "::warning file=WeTransfer（${{matrix.target}}）::$(cat wetransfer.log | grep https)"
     
     - name: 提取发布用的「奶牛快传」跟「WeTransfer」的链接
-      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' || (github.event.inputs.release == 'release' && github.event.inputs.release  != 'false')
+      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -318,7 +297,7 @@ jobs:
     
     - name: 自动发布固件
       uses: softprops/action-gh-release@v1
-      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' || (github.event.inputs.release == 'release' && github.event.inputs.release  != 'false')
+      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
@@ -346,12 +325,12 @@ jobs:
       with:
         name: 定时升级云端地址
         tag_name: update_Firmware
-        body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}（完成时间-${{ env.date }}）
+        body: 版本：${{ env.log1 }}（完成时间-${{ env.date1 }}）
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
-      if: steps.organizer.outputs.status == 'success' && env.SERVERCHAN_SCKEY == 'true' || (github.event.inputs.wxtz == 'wxtz' && github.event.inputs.wxtz  != 'false')
+      if: steps.organizer.outputs.status == 'success' && env.SERVERCHAN_SCKEY == 'true'
       with:
         SCKEY: ${{ secrets.SCKEY }}
         text: 恭喜主人${{ env.WXFB_MESSAGE }}固件编译成功！
