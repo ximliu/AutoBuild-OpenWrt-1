@@ -165,7 +165,6 @@ jobs:
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
           source common/upgrade.sh && Diy_Part1
-          echo "BANBEN=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
@@ -191,6 +190,7 @@ jobs:
       run: |
         cd openwrt
         source common/common.sh && Diy_xinxi
+        echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
     
     - name: 开始编译固件
       id: compile
@@ -324,7 +324,7 @@ jobs:
       with:
         name: 定时升级云端地址
         tag_name: update_Firmware
-        body: 版本：${{ env.BANBEN }}（完成时间-${{ env.date1 }}）
+        body: 版本：${{ env.BanBen }}（完成时间-${{ env.date1 }}）
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
