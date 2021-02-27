@@ -104,6 +104,8 @@ jobs:
         mkdir -p openwrt/common
         cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/{upgrade.sh,common.sh} ./openwrt/common
         chmod +x ./openwrt/common/* ./
+        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/AutoUpdate.sh ./openwrt/package/base-files/files/bin
+        chmod +x ./openwrt/package/base-files/files/bin/AutoUpdate.sh
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
@@ -111,8 +113,6 @@ jobs:
         source common/common.sh && Diy_notice
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         git clone https://github.com/281677160/luci-app-autoupdate package/luci-app-autoupdate
-        mv build/AutoUpdate/AutoUpdate.sh package/base-files/files/bin
-        chmod +x package/base-files/files/bin/AutoUpdate.sh
     
     - name: 加载源,patch补丁和自定义设置
       run: |
