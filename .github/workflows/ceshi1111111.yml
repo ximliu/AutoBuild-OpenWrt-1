@@ -108,63 +108,54 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        git clone -b main --single-branch https://github.com/281677160/Custom openwrt/common
-        chmod +x openwrt/common/* ./
+        git clone -b main --single-branch https://github.com/281677160/Custom ${GITHUB_WORKSPACE}/build/${{matrix.target}}
+        chmod 777 ${GITHUB_WORKSPACE}/build
+        cp -Rf ${GITHUB_WORKSPACE}/build openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
-        source common/common.sh && Diy_notice
+        source build/${{matrix.target}}/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
       run: |
-        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
-        source common/common.sh && Diy_all
+        source build/${{matrix.target}}/common.sh && Diy_all
         if [ ${{matrix.target}} != "openwrt" ]; then
           if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-            source common/common.sh && Diy_lede
+            source build/${{matrix.target}}/common.sh && Diy_lede
           elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-            source common/common.sh && Diy_lienol
+            source build/${{matrix.target}}/common.sh && Diy_lienol
           elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-            source common/common.sh && Diy_immortalwrt
+            source build/${{matrix.target}}/common.sh && Diy_immortalwrt
           fi
         fi
-        if [ -f "build/${{matrix.target}}/$DIY_P1_SH" ]; then
-          chmod +x build/${{matrix.target}}/$DIY_P1_SH
-          /bin/bash "build/${{matrix.target}}/$DIY_P1_SH"
-        fi
+        source build/${{matrix.target}}/$DIY_P1_SH
         ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
-        source common/common.sh && Diy_all2
+        source build/${{matrix.target}}/common.sh && Diy_all2
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-          source common/common.sh && Diy_lede2
+          source build/${{matrix.target}}/common.sh && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
           echo "Source=Lede" >> $GITHUB_ENV
           echo "ZUOZHE=lean" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-          source common/common.sh && Diy_lienol2
+          source build/${{matrix.target}}/common.sh && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
           echo "Source=Lienol" >> $GITHUB_ENV
           echo "ZUOZHE=lienol" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-          source common/common.sh && Diy_immortalwrt2
+          source build/${{matrix.target}}/common.sh && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
           echo "Source=Project" >> $GITHUB_ENV
           echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
-        if [ -f "build/${{matrix.target}}/$DIY_P2_SH" ]; then
-          chmod +x build/${{matrix.target}}/$DIY_P2_SH
-          /bin/bash "build/${{matrix.target}}/$DIY_P2_SH"
-        fi
+        source build/${{matrix.target}}/$DIY_P2_SH
         if [ -n "$(ls -A "build/${{matrix.target}}/patches" 2>/dev/null)" ]; then
           find "build/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
         fi
-        if [ -n "$(ls -A "build/${{matrix.target}}/files" 2>/dev/null)" ]; then
-          cp -rf build/${{matrix.target}}/files/* files
-          chmod -R 777 ./files
-        fi
+        cp -rf build/${{matrix.target}}/files/* files
         if [ -n "$(ls -A "build/${{matrix.target}}/diy" 2>/dev/null)" ]; then
           cp -Rf build/${{matrix.target}}/diy/* ./
         fi
@@ -172,7 +163,7 @@ jobs:
         if [ ${{matrix.target}} != "openwrt" ]; then
           if [ "${REGULAR_UPDATE}" == "true" ]; then
             echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-            source common/upgrade.sh && Diy_Part1
+            source build/${{matrix.target}}/upgrade.sh && Diy_Part1
           fi
         fi
      
