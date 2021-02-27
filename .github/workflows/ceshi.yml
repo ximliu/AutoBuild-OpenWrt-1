@@ -106,7 +106,7 @@ jobs:
       run: |
         cd openwrt
         mkdir -p common
-        mv build/AutoUpdate/{upgrade.sh,common.sh} common
+        mv ${GITHUB_WORKSPACE}/build/AutoUpdate/{upgrade.sh,common.sh} common
         chmod +x common/* ./
         source common/common.sh && Diy_notice
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
