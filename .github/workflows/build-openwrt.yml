@@ -291,6 +291,17 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     
+    - name: 自动发布固件
+      uses: CupOfTea696/gh-action-auto-release@v1.0.0
+      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
+      with:
+        title: "Release: $version"
+        tag: "v$semver"
+        draft: true
+        regex: "${{ env.FIRMWARE }}/*"
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+    
     - name: 发布定时升级云端地址
       uses: softprops/action-gh-release@v1
       if: steps.compile.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
