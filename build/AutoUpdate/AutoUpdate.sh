@@ -77,7 +77,8 @@ CURRENT_Version="$(awk 'NR==1' /etc/openwrt_info)"
 Github="$(awk 'NR==2' /etc/openwrt_info)"
 DEFAULT_Device="$(awk 'NR==3' /etc/openwrt_info)"
 Firmware_Type="$(awk 'NR==4' /etc/openwrt_info)"
-Firmware_opmz="$(awk 'NR==5' /etc/openwrt_info)"
+Firmware_COMP1="$(awk 'NR==5' /etc/openwrt_info)"
+Firmware_COMP2="$(awk 'NR==6' /etc/openwrt_info)"
 TMP_Available="$(df -m | grep "/tmp" | awk '{print $4}' | awk 'NR==1')"
 Overlay_Available="$(df -h | grep ":/overlay" | awk '{print $4}' | awk 'NR==1')"
 case ${DEFAULT_Device} in
@@ -106,6 +107,7 @@ x86-64)
 *)
 	CURRENT_Device="$(jsonfilter -e '@.model.id' < /etc/board.json | tr ',' '_')"
 	Firmware_SFX=".${Firmware_Type}"
+	Firmware_GESHI=".${Firmware_Type}"
 	[[ -z ${Firmware_SFX} ]] && Firmware_SFX=".${Firmware_Type}"
 	Detail_SFX=".detail"
 	Space_RQM=50
@@ -194,14 +196,13 @@ if [[ ! "$?" == 0 ]];then
 	exit
 fi
 TIME && echo "正在获取云端固件版本..."
-GET_Firmware="$(cat /tmp/Github_Tags | egrep -o "${Firmware_opmz}-[a-zA-Z0-9_-]+.[0-9]+.[0-9]+.[0-9]+${Firmware_SFX}" | awk 'END {print}')"
-GET_Ver="${GET_Firmware#*${Firmware_opmz}-}"
-GET_Version="$(echo ${GET_Ver} | egrep -o "[a-zA-Z0-9_-]+.[0-9]+.[0-9]+.[0-9]+${BOOT_Type}")"
+GET_Firmware="$(cat /tmp/Github_Tags | egrep -o "${Firmware_COMP1}-${Firmware_COMP2}+.[a-zA-Z0-9_-]+.[0-9]+${Firmware_SFX}" | awk 'END {print}')"
+GET_Version="$(echo ${GET_Firmware} | egrep -o "${Firmware_COMP2}+.[a-zA-Z0-9_-]+.[0-9]+${BOOT_Type}")"
 if [[ -z "${GET_Firmware}" ]] || [[ -z "${GET_Version}" ]];then
 	TIME && echo "云端固件版本获取失败!"
 	exit
 fi
-Firmware_Info="$(echo ${GET_Firmware} | egrep -o "[a-zA-Z0-9_-]+.[0-9]+.[0-9]+.[0-9]+")"
+Firmware_Info="$(echo ${GET_Firmware} | egrep -o "${Firmware_COMP1}-${Firmware_COMP2}+.[a-zA-Z0-9_-]+.[0-9]+")"
 Firmware="${GET_Firmware}"
 Firmware_Detail="${Firmware_Info}${Detail_SFX}"
 echo -e "\n固件作者: ${Author%/*}"
