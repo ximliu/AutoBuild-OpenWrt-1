@@ -103,9 +103,9 @@ jobs:
         chmod +x $GITHUB_WORKSPACE/openwrt/* ./
         mkdir -p openwrt/common
         cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/{upgrade.sh,common.sh} ./openwrt/common
-        chmod +x ./openwrt/common/* ./
+        chmod +x ${GITHUB_WORKSPACE}/openwrt/common/* ./
         cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/AutoUpdate.sh ./openwrt/package/base-files/files/bin
-        chmod +x ./openwrt/package/base-files/files/bin/AutoUpdate.sh
+        chmod +x ${GITHUB_WORKSPACE}/openwrt/package/base-files/files/bin/AutoUpdate.sh
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
