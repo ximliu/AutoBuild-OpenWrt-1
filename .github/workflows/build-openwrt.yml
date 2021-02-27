@@ -325,7 +325,7 @@ jobs:
       with:
         name: 定时升级云端地址
         tag_name: update_Firmware
-        body: 版本：${{ env.log1 }}（完成时间-${{ env.date1 }}）
+        body: 版本：${{ env.BANBEN }}（完成时间-${{ env.date1 }}）
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
