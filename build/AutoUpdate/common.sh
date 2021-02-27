@@ -178,7 +178,7 @@ fi
 if [[ ${REGULAR_UPDATE} == "true" ]]; then
 	echo ""
 	echo "把定时自动更新插件编译进固件: 开启"
-	echo "《您现在编译的固件版本：《${BANBEN1}》"
+	echo "《您现在编译的固件版本：${BANBEN1}》"
 	echo "《请把“REPO_TOKEN”密匙设置好,没设置好密匙不能发布云端地址》"
 	echo "《x86-64、phicomm-k3、newifi-d2已自动适配固件名字跟后缀，无需自行设置了》"
 	echo "《如有其他机子可以用定时更新固件的话，请告诉我，我把固件名字跟后缀适配了》"
