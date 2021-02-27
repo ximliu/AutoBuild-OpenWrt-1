@@ -130,38 +130,42 @@ echo "源码作者: ${ZUOZHE}"
 echo "机子型号: ${TARGET_PRO}"
 echo "固件作者: ${Author}"
 echo "仓库链接: ${GITHUB_RELEASE}"
-if [[ ${UPLOAD_BIN_DIR} == "false" ]]; then
-	echo "上传BIN文件夹(固件+IPK): 关闭"
-elif [[ ${UPLOAD_BIN_DIR} == "true" ]]; then
+if [[ ${UPLOAD_BIN_DIR} == "true" ]]; then
 	echo "上传BIN文件夹(固件+IPK): 开启"
+else
+	echo "上传BIN文件夹(固件+IPK): 关闭"
 fi
-if [[ ${UPLOAD_CONFIG} == "false" ]]; then
-	echo "上传[.config]配置文件: 关闭"
-elif [[ ${UPLOAD_CONFIG} == "true" ]]; then
+if [[ ${UPLOAD_CONFIG} == "true" ]]; then
 	echo "上传[.config]配置文件: 开启"
+else
+	echo "上传[.config]配置文件: 关闭"
 fi
-if [[ ${UPLOAD_FIRMWARE} == "false" ]]; then
-	echo "上传固件在github空间: 关闭"
-elif [[ ${UPLOAD_FIRMWARE} == "true" ]]; then
+if [[ ${UPLOAD_FIRMWARE} == "true" ]]; then
 	echo "上传固件在github空间: 开启"
+else
+	echo "上传固件在github空间: 关闭"
 fi
-if [[ ${UPLOAD_COWTRANSFER} == "false" ]]; then
-	echo "上传固件到到【奶牛快传】和【WETRANSFER】: 关闭"
-elif [[ ${UPLOAD_COWTRANSFER} == "true" ]]; then
+if [[ ${UPLOAD_COWTRANSFER} == "true" ]]; then
 	echo "上传固件到到【奶牛快传】和【WETRANSFER】: 开启"
+else
+	echo "上传固件到到【奶牛快传】和【WETRANSFER】: 关闭"
 fi
 if [[ ${UPLOAD_RELEASE} == "true" ]]; then
 	echo "发布固件: 开启"
 else
 	echo "发布固件: 关闭"
 fi
-if [[ ${SERVERCHAN_SCKEY} == "false" ]]; then
-	echo "微信通知: 关闭"
-elif [[ ${SERVERCHAN_SCKEY} == "true" ]]; then
+if [[ ${SERVERCHAN_SCKEY} == "true" ]]; then
 	echo "微信通知: 开启"
+else
+	echo "微信通知: 关闭"
 fi
 if [[ ${REGULAR_UPDATE} == "true" ]]; then
 	echo "把定时自动更新插件编译进固件: 开启"
+	echo "定时更新固件版本：《${BANBEN}》"
+	echo "《请把“REPO_TOKEN”密匙设置好,没设置好密匙不能发布云端地址》"
+	echo "《x86-64、phicomm-k3、newifi-d2已自动适配固件名字跟后缀，无需自行设置了》"
+	echo "《如有其他机子可以用定时更新固件的话，请告诉我，我把固件名字跟后缀适配了》"
 else	
 	echo "把定时自动更新插件编译进固件: 关闭"
 fi
