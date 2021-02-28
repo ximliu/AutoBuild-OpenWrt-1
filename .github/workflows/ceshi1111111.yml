@@ -102,26 +102,27 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
+    
     - name: 下载"${{matrix.target}}"源码
       working-directory: /workdir
       run: |
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        svn co https://github.com/281677160/Custom/trunk ${GITHUB_WORKSPACE}/build/${{matrix.target}}/
-        chmod 777 ${GITHUB_WORKSPACE}/build
-        cp -Rf ${GITHUB_WORKSPACE}/build openwrt
+        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/* ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}
+        chmod 777 ${GITHUB_WORKSPACE}/openwrt/build
+        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
+        git clone https://github.com/281677160/luci-app-autoupdate package/luci-app-autoupdate
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         source build/${{matrix.target}}/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
       run: |
         cd openwrt
-        mv ${GITHUB_WORKSPACE}/build/${{matrix.target}}/{AutoUpdate.sh,AutoBuild_Tools.sh} package/base-files/files/bin
         source build/${{matrix.target}}/common.sh && Diy_all
         if [ ${{matrix.target}} != "openwrt" ]; then
           if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
