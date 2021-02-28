@@ -99,6 +99,7 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
@@ -114,7 +115,6 @@ jobs:
     
     - name: 加载源,patch补丁和自定义设置
       run: |
-        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
         source common/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
