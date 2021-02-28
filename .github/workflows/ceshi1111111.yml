@@ -288,13 +288,12 @@ jobs:
     
     - name: 发布定时升级云端地址
       uses: softprops/action-gh-release@v1
-      if: steps.compile.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
+      if: env.REGULAR_UPDATE == 'true' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        name: 定时升级云端地址
         tag_name: update_Firmware
-        body: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
+        body_path: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
         files: openwrt/bin/Firmware/*
     
     - name: 自动发布固件
