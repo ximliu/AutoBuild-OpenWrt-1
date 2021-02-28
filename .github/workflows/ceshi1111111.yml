@@ -278,15 +278,15 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     
+    
     - name: 发布定时升级云端地址
-      uses: softprops/action-gh-release@v1
-      if: env.REGULAR_UPDATE == 'true' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      uses: svenstaro/upload-release-action@v2
+      if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       with:
-        tag_name: update_Firmware
-        body_path: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
-        files: openwrt/bin/Firmware/*
+        repo_token: ${{ secrets.REPO_TOKEN }}
+        file: openwrt/bin/Firmware/*
+        asset_name: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
+        tag: update_Firmware
     
     - name: 自动发布固件
       uses: softprops/action-gh-release@v1
