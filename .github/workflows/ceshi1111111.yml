@@ -113,6 +113,8 @@ jobs:
         mkdir -p ${GITHUB_WORKSPACE}/build/${{matrix.target}}/{diy,files,patches}
         cp -Rf ${GITHUB_WORKSPACE}/build openwrt
         chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
+        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files openwrt
+        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
@@ -123,8 +125,6 @@ jobs:
     - name: 加载源,patch补丁和自定义设置
       run: |
         cd openwrt
-        cp -Rf build/${{matrix.target}}/files ./
-        cp -Rf build/${{matrix.target}}/diy/* ./
         source build/${{matrix.target}}/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
           source build/${{matrix.target}}/common.sh && Diy_lede
