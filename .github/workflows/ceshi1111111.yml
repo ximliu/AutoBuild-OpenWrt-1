@@ -101,8 +101,8 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        svn co https://github.com/281677160/ceshi1/trunk ${GITHUB_WORKSPACE}/build/${{matrix.target}}/
-        mkdir -p ${GITHUB_WORKSPACE}/build/${{matrix.target}}/{diy,files,patches}
+        git clone -b main https://github.com/281677160/ceshi1 $GITHUB_WORKSPACE/common
+        cp -Rf $GITHUB_WORKSPACE/common/* ${GITHUB_WORKSPACE}/build/${{matrix.target}}
         mv -f ${GITHUB_WORKSPACE}/build openwrt
         chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
         mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files openwrt
