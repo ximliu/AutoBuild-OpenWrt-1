@@ -111,8 +111,8 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         svn co https://github.com/281677160/ceshi1/trunk ${GITHUB_WORKSPACE}/build/${{matrix.target}}/
         mkdir -p ${GITHUB_WORKSPACE}/build/${{matrix.target}}/{diy,files,patches}
-        chmod 777 ${GITHUB_WORKSPACE}/build
         cp -Rf ${GITHUB_WORKSPACE}/build openwrt
+        chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
