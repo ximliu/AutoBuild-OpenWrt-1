@@ -109,10 +109,11 @@ jobs:
         df -hT $PWD
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/* ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
+        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/* ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}
         mkdir -p ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/{diy,files,patches}
         chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
-        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin/
+        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/package/base-files/files/bin
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
