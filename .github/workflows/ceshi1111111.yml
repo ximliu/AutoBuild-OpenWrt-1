@@ -103,7 +103,7 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         git clone -b main https://github.com/281677160/ceshi1 common
         cp -Rf common/* ${GITHUB_WORKSPACE}/build/${{matrix.target}}
-        mv -f build ${GITHUB_WORKSPACE}/openwrt
+        mv -f ${GITHUB_WORKSPACE}/build ${GITHUB_WORKSPACE}/openwrt
         chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
         mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files ${GITHUB_WORKSPACE}/openwrt
         cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* ${GITHUB_WORKSPACE}/openwrt
