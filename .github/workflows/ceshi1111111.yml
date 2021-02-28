@@ -111,7 +111,7 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         svn co https://github.com/281677160/ceshi1/trunk ${GITHUB_WORKSPACE}/build/${{matrix.target}}/
         mkdir -p ${GITHUB_WORKSPACE}/build/${{matrix.target}}/{diy,files,patches}
-        cp -Rf ${GITHUB_WORKSPACE}/build openwrt
+        mv -f ${GITHUB_WORKSPACE}/build openwrt
         chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
         mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files openwrt
         mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* openwrt
