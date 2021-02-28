@@ -105,7 +105,12 @@ jobs:
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
+        git clone -b main https://github.com/281677160/ceshi1 common
+        cp -Rf common/* ${GITHUB_WORKSPACE}/build/${{matrix.target}}
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
+        chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
+        mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files ${GITHUB_WORKSPACE}/openwrt
+        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* ${GITHUB_WORKSPACE}/openwrt
     
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
