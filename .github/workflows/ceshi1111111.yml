@@ -110,8 +110,10 @@ jobs:
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/* ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}
-        chmod 777 ${GITHUB_WORKSPACE}/openwrt/build
-        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
+        mkdir -p ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/{diy,files,patches}
+        chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
+        cp -Rf ${GITHUB_WORKSPACE}/build/AutoUpdate/AutoUpdate.sh openwrt/package/base-files/files/bin
+        chmod -R +x ${GITHUB_WORKSPACE}/openwrt/package/base-files/files/bin
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
@@ -123,15 +125,15 @@ jobs:
     - name: 加载源,patch补丁和自定义设置
       run: |
         cd openwrt
+        cp -rf build/${{matrix.target}}/files/* files
+        cp -Rf build/${{matrix.target}}/diy/* ./
         source build/${{matrix.target}}/common.sh && Diy_all
-        if [ ${{matrix.target}} != "openwrt" ]; then
-          if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-            source build/${{matrix.target}}/common.sh && Diy_lede
-          elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-            source build/${{matrix.target}}/common.sh && Diy_lienol
-          elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-            source build/${{matrix.target}}/common.sh && Diy_immortalwrt
-          fi
+        if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
+          source build/${{matrix.target}}/common.sh && Diy_lede
+        elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
+          source build/${{matrix.target}}/common.sh && Diy_lienol
+        elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
+          source build/${{matrix.target}}/common.sh && Diy_immortalwrt
         fi
         source build/${{matrix.target}}/$DIY_P1_SH
         ./scripts/feeds clean && ./scripts/feeds update -a
@@ -154,19 +156,11 @@ jobs:
           echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
         source build/${{matrix.target}}/$DIY_P2_SH
-        if [ -n "$(ls -A "build/${{matrix.target}}/patches" 2>/dev/null)" ]; then
-          find "build/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
-        fi
-        cp -rf build/${{matrix.target}}/files/* files
-        if [ -n "$(ls -A "build/${{matrix.target}}/diy" 2>/dev/null)" ]; then
-          cp -Rf build/${{matrix.target}}/diy/* ./
-        fi
+        find "build/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
-        if [ ${{matrix.target}} != "openwrt" ]; then
-          if [ "${REGULAR_UPDATE}" == "true" ]; then
-            echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-            source build/${{matrix.target}}/upgrade.sh && Diy_Part1
-          fi
+        if [ "${REGULAR_UPDATE}" == "true" ]; then
+          echo "Compile_Date=$(date +%Y%m%d-%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
+          source build/${{matrix.target}}/upgrade.sh && Diy_Part1
         fi
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
@@ -188,15 +182,11 @@ jobs:
     - name: 编译信息
       run: |
         cd openwrt
-        if [[ ${{matrix.target}} != "openwrt" ]]; then
-          if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-            source common/upgrade.sh && Diy_Part2
-            echo "log1=$(awk 'NR==4' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log2=$(awk 'NR==3' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-            echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-          else
-            source common/common.sh && Diy_xinxi
-          fi
+        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+          source build/${{matrix.target}}/upgrade.sh && Diy_Part2
+          echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+        else
+          source build/${{matrix.target}}/common.sh && Diy_xinxi
         fi
     
     - name: 开始编译固件
@@ -231,7 +221,7 @@ jobs:
       run: |
         cd openwrt
         if [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
-          source common/common.sh && Diy_n1
+          source build/${{matrix.target}}/common.sh && Diy_n1
          cd out
          for x in ${devices[*]}; do
            cd $x
@@ -250,7 +240,7 @@ jobs:
         cd openwrt
         if [[ ${{matrix.target}} != "openwrt" ]]; then
           if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-            source common/upgrade.sh && Diy_Part3
+            source build/${{matrix.target}}/upgrade.sh && Diy_Part3
           fi  
         fi
         mkdir bin/config
@@ -289,7 +279,6 @@ jobs:
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
         echo "::warning file=奶牛快传（${{matrix.target}}）::$(cat cowtransfer.log | grep https)"
-        curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "::warning file=WeTransfer（${{matrix.target}}）::$(cat wetransfer.log | grep https)"
     
@@ -299,7 +288,6 @@ jobs:
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
         echo "COWTRANSFER_URL=$(cat cowtransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
-        curl -fsSL git.io/file-transfer | sh
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     
@@ -333,7 +321,7 @@ jobs:
       with:
         name: 定时升级云端地址
         tag_name: update_Firmware
-        body: ${{ env.log1 }}-${{ env.log2 }}-${{ env.log3 }}（完成时间-${{ env.date }}）
+        body: ${{ env.log3 }}（完成时间-${{ env.date1 }}）
         files: openwrt/bin/Firmware/*
     
     - name: 微信通知
