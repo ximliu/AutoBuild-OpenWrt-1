@@ -292,7 +292,7 @@ jobs:
       if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       with:
         repo_token: ${{ secrets.REPO_TOKEN }}
-        file: openwrt/bin/Firmware/*
+        file: ./openwrt/bin/Firmware/*
         asset_name: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
         tag: update_Firmware
     
