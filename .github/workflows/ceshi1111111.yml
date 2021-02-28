@@ -82,7 +82,7 @@ jobs:
         text: 主人"${{ env.WXFB_MESSAGE }}"编译开始啦
         desp: 主人您要编译的["${{ env.WXFB_MESSAGE }}"]固件正在努力耕耘中,请耐心等待......
     
-    - name: 开始安装编译所需系统
+    - name: 整理编译环境
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
@@ -103,7 +103,7 @@ jobs:
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         
     
-    - name: 公告（每次启动都读取最新内容，展开可以查看）
+    - name: 整理脚本文件
       run: |
         git clone -b main https://github.com/281677160/ceshi1 common
         cp -Rf common/* ${GITHUB_WORKSPACE}/build/${{matrix.target}}
@@ -111,14 +111,6 @@ jobs:
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
         mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files ${GITHUB_WORKSPACE}/openwrt
         cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* ${GITHUB_WORKSPACE}/openwrt
-    
-    - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
-      uses: 281677160/debugger-action@master
-      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-    
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
@@ -297,7 +289,7 @@ jobs:
       if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       with:
         repo_token: ${{ secrets.REPO_TOKEN }}
-        file: ./openwrt/bin/Firmware/*
+        file: openwrt/bin/Firmware/*
         asset_name: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
         tag: update_Firmware
     
