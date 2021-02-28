@@ -110,13 +110,13 @@ jobs:
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         svn co https://github.com/281677160/ceshi1/trunk ${GITHUB_WORKSPACE}/build/${{matrix.target}}/
+        mkdir -p ${GITHUB_WORKSPACE}/build/${{matrix.target}}/{diy,files,patches}
         chmod 777 ${GITHUB_WORKSPACE}/build
         cp -Rf ${GITHUB_WORKSPACE}/build openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
-        git clone https://github.com/281677160/luci-app-autoupdate package/luci-app-autoupdate
         echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         source build/${{matrix.target}}/common.sh && Diy_notice
     
