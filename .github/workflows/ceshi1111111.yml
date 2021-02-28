@@ -176,16 +176,15 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-    
+        if [ "${REGULAR_UPDATE}" == "true" ]; then
+          source build/${{matrix.target}}/upgrade.sh && Diy_Part2
+        fi
+        
     - name: 编译信息
       run: |
         cd openwrt
-        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-          source build/${{matrix.target}}/upgrade.sh && Diy_Part2
-          echo "log3=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
-        else
-          source build/${{matrix.target}}/common.sh && Diy_xinxi
-        fi
+        source build/${{matrix.target}}/common.sh && Diy_xinxi
+        echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
     
     - name: 开始编译固件
       id: compile
@@ -236,10 +235,8 @@ jobs:
       id: organizer
       run: |
         cd openwrt
-        if [[ ${{matrix.target}} != "openwrt" ]]; then
-          if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-            source build/${{matrix.target}}/upgrade.sh && Diy_Part3
-          fi  
+        if [[ "${REGULAR_UPDATE}" == "true" ]]; then
+          source build/${{matrix.target}}/upgrade.sh && Diy_Part3
         fi
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
@@ -281,7 +278,7 @@ jobs:
         echo "::warning file=WeTransfer（${{matrix.target}}）::$(cat wetransfer.log | grep https)"
     
     - name: 提取发布用的「奶牛快传」跟「WeTransfer」的链接
-      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' || (github.event.inputs.release == 'release' && github.event.inputs.release  != 'false')
+      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
@@ -289,9 +286,20 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> $GITHUB_ENV
     
+    - name: 发布定时升级云端地址
+      uses: softprops/action-gh-release@v1
+      if: steps.compile.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      with:
+        name: 定时升级云端地址
+        tag_name: update_Firmware
+        body: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
+        files: openwrt/bin/Firmware/*
+    
     - name: 自动发布固件
       uses: softprops/action-gh-release@v1
-      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' || (github.event.inputs.release == 'release' && github.event.inputs.release  != 'false')
+      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
@@ -310,17 +318,6 @@ jobs:
             
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
-    
-    - name: 发布定时升级云端地址
-      uses: softprops/action-gh-release@v1
-      if: steps.compile.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
-      env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-      with:
-        name: 定时升级云端地址
-        tag_name: update_Firmware
-        body: ${{ env.log3 }}（完成时间-${{ env.date1 }}）
-        files: openwrt/bin/Firmware/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
