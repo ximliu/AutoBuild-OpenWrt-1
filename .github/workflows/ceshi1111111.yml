@@ -104,14 +104,15 @@ jobs:
         git clone -b main https://github.com/281677160/ceshi1 common
         cp -Rf common/* ${GITHUB_WORKSPACE}/build/${{matrix.target}}
         mv -f ${GITHUB_WORKSPACE}/build ${GITHUB_WORKSPACE}/openwrt
-        chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
+        chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
         mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files ${GITHUB_WORKSPACE}/openwrt
         cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* ${GITHUB_WORKSPACE}/openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
-        echo "GITHUB_RELEASE=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
+        echo "GITHUB_REL=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
+        echo "GITHUB_RELEASE=${GITHUB_REL}/releases" >> $GITHUB_ENV
         source build/${{matrix.target}}/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
@@ -322,7 +323,7 @@ jobs:
               完成时间：${{ env.date1 }}
               
               
-              发布地址：${{ env.GITHUB_RELEASE }}/releases
+              发布地址：${{ env.GITHUB_RELEASE }}
               
               
               奶牛快传：${{ env.COWTRANSFER_URL }}
