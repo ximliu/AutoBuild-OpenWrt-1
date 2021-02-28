@@ -117,6 +117,7 @@ jobs:
     
     - name: 加载源,patch补丁和自定义设置
       run: |
+        cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cd openwrt
         source build/${{matrix.target}}/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
