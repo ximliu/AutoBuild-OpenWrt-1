@@ -113,8 +113,8 @@ jobs:
         mkdir -p ${GITHUB_WORKSPACE}/build/${{matrix.target}}/{diy,files,patches}
         cp -Rf ${GITHUB_WORKSPACE}/build openwrt
         chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
-        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files openwrt
-        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* openwrt
+        mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files openwrt
+        mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
@@ -133,7 +133,7 @@ jobs:
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
           source build/${{matrix.target}}/common.sh && Diy_immortalwrt
         fi
-        source build/${{matrix.target}}/$DIY_P1_SH
+        ./build/${{matrix.target}}/$DIY_P1_SH
         ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
         source build/${{matrix.target}}/common.sh && Diy_all2
@@ -153,7 +153,7 @@ jobs:
           echo "Source=Project" >> $GITHUB_ENV
           echo "ZUOZHE=CTCGFW" >> $GITHUB_ENV
         fi
-        source build/${{matrix.target}}/$DIY_P2_SH
+        ./build/${{matrix.target}}/$DIY_P2_SH
         find "build/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
         [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
         if [ "${REGULAR_UPDATE}" == "true" ]; then
