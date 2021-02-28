@@ -114,7 +114,7 @@ jobs:
         mv -f ${GITHUB_WORKSPACE}/build openwrt
         chmod -R 777 ${GITHUB_WORKSPACE}/openwrt/build
         mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files openwrt
-        mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* openwrt
+        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* openwrt
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
