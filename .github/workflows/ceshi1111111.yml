@@ -23,6 +23,9 @@ env:
   SCKEY: ${{ secrets.SCKEY }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+  LEDE: https://github.com/coolsnowwolf/lede
+  LIENOL: https://github.com/Lienol/openwrt
+  PROJECT: https://github.com/immortalwrt/immortalwrt
   TZ: Asia/Shanghai
 
 jobs: 
@@ -125,13 +128,13 @@ jobs:
       run: |
         cd openwrt
         source ${PATH1}/common.sh && Diy_all
-        if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
+        if [ "${REPO_URL}" == "${LEDE}" ]; then
           source ${PATH1}/common.sh && Diy_lede
           source ${PATH1}/$DIY_P1_SH
-        elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
+        elif [ "${REPO_URL}" == "${LIENOL}" ]; then
           source ${PATH1}/common.sh && Diy_lienol
           source ${PATH1}/$DIY_P1_SH
-        elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
+        elif [ "${REPO_URL}" == "${PROJECT}" ]; then
           source ${PATH1}/common.sh && Diy_immortalwrt
           source ${PATH1}/$DIY_P1_SH
         fi
@@ -139,23 +142,23 @@ jobs:
         cp -Rf ${PATH1}/files ./ && chmod -R +x files
         cp -Rf ${PATH1}/diy/* ./
         source ${PATH1}/common.sh && Diy_all2
-        if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
+        if [ "${REPO_URL}" == "${LEDE}" ]; then
           source ${PATH1}/common.sh && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
           echo "Source=Lede" >> $GITHUB_ENV
           echo "ZUOZHE=Lean's" >> $GITHUB_ENV
-        elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
+        elif [ "${REPO_URL}" == "${LIENOL}" ]; then
           source ${PATH1}/common.sh && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
           echo "Source=Lienol" >> $GITHUB_ENV
           echo "ZUOZHE=lienol's" >> $GITHUB_ENV
-        elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
+        elif [ "${REPO_URL}" == "${PROJECT}" ]; then
           source ${PATH1}/common.sh && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
           echo "Source=Project" >> $GITHUB_ENV
           echo "ZUOZHE=ctcgfw" >> $GITHUB_ENV
         fi
-        ./${PATH1}/$DIY_P2_SH
+        source ${PATH1}/$DIY_P2_SH
         find "${PATH1}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
         [ -e ${PATH1}/$CONFIG_FILE ] && mv ${PATH1}/$CONFIG_FILE .config
         if [ "${REGULAR_UPDATE}" == "true" ]; then
