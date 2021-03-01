@@ -310,17 +310,16 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
     
-    - name: Create release
+    - name: 发布定时升级云端固件
       id: create_release
       uses: ncipollo/release-action@v1.8.0
       if: env.REGULAR_UPDATE == 'true' && !cancelled()
       with:
-        name: OpenWRT-R2S-R4S-K510
+        name: 定时升级固件云端
         allowUpdates: true
-        tag: snapshot
+        tag: update_Firmware
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
-        bodyFile: "body-origin.md"
         artifacts: ./openwrt/bin/Firmware/*
     
     - name: 微信通知
