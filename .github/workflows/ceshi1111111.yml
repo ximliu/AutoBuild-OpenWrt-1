@@ -305,7 +305,6 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
     
     - name: 发布定时升级云端固件
-      id: create_release
       uses: ncipollo/release-action@v1.8.0
       if: env.REGULAR_UPDATE == 'true' && !cancelled()
       with:
