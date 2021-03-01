@@ -311,7 +311,7 @@ jobs:
         name: 定时升级固件云端
         tag: update_Firmware
         token: ${{ secrets.REPO_TOKEN }}
-        body: An optional body for the release.
+        bodyFile: "body-origin.md"
         artifacts: ./openwrt/bin/Firmware/*
     
     - name: 微信通知
