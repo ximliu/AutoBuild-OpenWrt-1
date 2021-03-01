@@ -127,13 +127,13 @@ jobs:
         source ${PATH1}/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
           source ${PATH1}/common.sh && Diy_lede
-          ./${PATH1}/$DIY_P1_SH
+          source ${PATH1}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
           source ${PATH1}/common.sh && Diy_lienol
-          ./${PATH1}/$DIY_P1_SH
+          source ${PATH1}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
           source ${PATH1}/common.sh && Diy_immortalwrt
-          ./${PATH1}/$DIY_P1_SH
+          source ${PATH1}/$DIY_P1_SH
         fi
         ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a
         cp -Rf ${PATH1}/files ./ && chmod -R +x files
