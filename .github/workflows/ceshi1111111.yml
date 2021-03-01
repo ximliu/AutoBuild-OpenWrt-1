@@ -320,6 +320,7 @@ jobs:
         tag: update_Firmware
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
+        body: An optional body for the release.
         artifacts: ./openwrt/bin/Firmware/*
     
     - name: 微信通知
