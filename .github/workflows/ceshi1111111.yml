@@ -311,15 +311,19 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
     
-    - name: Upload release asset
-      uses: svenstaro/upload-release-action@v2
+    - name: Create release
+      id: create_release
+      uses: ncipollo/release-action@v1.8.0
+      if: env.REGULAR_UPDATE == 'true' && !cancelled()
       with:
-        repo_token: ${{ secrets.REPO_TOKEN }}
-        file: ./openwrt/bin/Firmware/*
-        tag: Firmware
-        file_glob: true
-        overwrite: true
-        release_name: Firmware自动发布
+        name: OpenWRT-R2S-R4S-K510
+        allowUpdates: true
+        tag: snapshot
+        commit: main
+        replacesArtifacts: true
+        token: ${{ secrets.REPO_TOKEN }}
+        bodyFile: "body-origin"
+        artifacts: ./openwrt/bin/Firmware/*.img,./openwrt/bin/Firmware/*.bin,./openwrt/bin/Firmware/*.img.gz
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
