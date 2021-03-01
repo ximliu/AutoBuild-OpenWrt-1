@@ -106,8 +106,8 @@ jobs:
     
     - name: 整理脚本文件
       run: |
-        git clone -b main https://github.com/281677160/ceshi1 common
-        cp -Rf common/*.sh ${GITHUB_WORKSPACE}/build/${{matrix.target}}
+        git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
+        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
         echo "文件整理完毕,查看系统剩余空间"
