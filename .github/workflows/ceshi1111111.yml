@@ -110,7 +110,7 @@ jobs:
         cp -Rf common/*.sh ${GITHUB_WORKSPACE}/build/${{matrix.target}}
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
-        echo "LUJING=${GITHUB_WORKSPACE}/build/${{matrix.target}}" >> $GITHUB_ENV
+        echo "LUJING=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
         echo "文件整理完毕,查看系统剩余空间"
         df -hT $PWD
     
@@ -121,7 +121,7 @@ jobs:
         echo "GITHUB_RELEASE=${GITHUB_REL}/releases" >> $GITHUB_ENV
         source build/${{matrix.target}}/common.sh && Diy_notice
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-          cd ../ && cp -Rf common/LEDE/* LUJING=${GITHUB_WORKSPACE}/build/${{matrix.target}}
+          cd ../ && cp -Rf common/LEDE/* $LUJING
         fi
     
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
