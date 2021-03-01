@@ -103,15 +103,15 @@ jobs:
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         echo "Home=$GITHUB_WORKSPACE/openwrt" >> $GITHUB_ENV
-        echo "PATH=$GITHUB_WORKSPACE/openwrt/${{matrix.target}}" >> $GITHUB_ENV
+        echo "PATH1=$GITHUB_WORKSPACE/openwrt/${{matrix.target}}" >> $GITHUB_ENV
         
     
     - name: 整理脚本文件
       run: |
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
-        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${PATH}
-        chmod -R +x ${PATH}
+        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh $PATH1
+        chmod -R +x $PATH1
         rm -rf {build,README.md}
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
@@ -119,7 +119,7 @@ jobs:
         cd openwrt
         echo "GITHUB_REL=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         echo "GITHUB_RELEASE=${GITHUB_REL}/releases" >> $GITHUB_ENV
-        source build/${{matrix.target}}/common.sh && Diy_notice
+        source $PATH1/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
       run: |
