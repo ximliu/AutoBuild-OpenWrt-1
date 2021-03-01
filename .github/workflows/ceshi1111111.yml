@@ -134,7 +134,7 @@ jobs:
         ./build/${{matrix.target}}/$DIY_P1_SH
         ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
-        cp -Rf build/${{matrix.target}}/files ./
+        cp -Rf build/${{matrix.target}}/files ./ && chmod -R +x files
         cp -Rf build/${{matrix.target}}/diy/* ./
         source build/${{matrix.target}}/common.sh && Diy_all2
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
