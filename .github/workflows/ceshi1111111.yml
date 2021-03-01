@@ -310,6 +310,7 @@ jobs:
       with:
         name: 定时升级固件云端
         tag: update_Firmware
+        commit: main
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "body-origin.md"
         artifacts: ./openwrt/bin/Firmware/*
