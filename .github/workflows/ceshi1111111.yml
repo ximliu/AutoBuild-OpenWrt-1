@@ -101,12 +101,11 @@ jobs:
       run: |
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-        echo "Home=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
-        echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
-        
     
     - name: 整理脚本文件
       run: |
+        echo "Home=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
+        echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${PATH1}
@@ -131,7 +130,7 @@ jobs:
           source ${PATH1}/common.sh && Diy_immortalwrt
         fi
         /bin/bash "${PATH1}/$DIY_P1_SH"
-        ./scripts/feeds clean && ./scripts/feeds update -a && 
+        ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
         cp -Rf ${PATH1}/files ./ && chmod -R +x files
         cp -Rf ${PATH1}/diy/* ./
