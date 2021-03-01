@@ -127,14 +127,15 @@ jobs:
         source build/${{matrix.target}}/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
           source build/${{matrix.target}}/common.sh && Diy_lede
+          ./build/${{matrix.target}}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
           source build/${{matrix.target}}/common.sh && Diy_lienol
+          ./build/${{matrix.target}}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
           source build/${{matrix.target}}/common.sh && Diy_immortalwrt
+          ./build/${{matrix.target}}/$DIY_P1_SH
         fi
-        ./build/${{matrix.target}}/$DIY_P1_SH
-        ./scripts/feeds clean && ./scripts/feeds update -a
-        ./scripts/feeds install -a && ./scripts/feeds install -a
+        ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a
         cp -Rf build/${{matrix.target}}/files ./ && chmod -R +x files
         cp -Rf build/${{matrix.target}}/diy/* ./
         source build/${{matrix.target}}/common.sh && Diy_all2
