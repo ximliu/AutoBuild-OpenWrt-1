@@ -170,24 +170,24 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
+    - name: 编译信息
+      run: |
+        cd openwrt
+        make defconfig
+        source build/${{matrix.target}}/upgrade.sh
+        source build/${{matrix.target}}/common.sh && Diy_xinxi
+        echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
+    
     - name: 下载软件包
       id: package
       run: |
         cd openwrt
-        make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           source build/${{matrix.target}}/upgrade.sh && Diy_Part2
         fi
-        
-    - name: 编译信息
-      run: |
-        cd openwrt
-        source build/${{matrix.target}}/upgrade.sh
-        source build/${{matrix.target}}/common.sh && Diy_xinxi
-        echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
     
     - name: 开始编译固件
       id: compile
