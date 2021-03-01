@@ -308,17 +308,17 @@ jobs:
             ⛄ WeTransfer(国外高速🚀下载)： ${{ env.WETRANSFER_URL }}
             
             🌴 链接有效期为7天，无需注册直接下载 🐤
-        files: openwrt/bin/Firmware/*
+        files: ${{ env.FIRMWARE }}/*
     
-    - name: Upload binaries to release
+    - name: Upload release asset
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.REPO_TOKEN }}
-        file: ${{ env.FIRMWARE }}/*
-        asset_name: mything
-        tag: release
+        file: ./openwrt/bin/Firmware/*
+        tag: Firmware
+        file_glob: true
         overwrite: true
-        body: "This is my release text"
+        release_name: Firmware自动发布
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
