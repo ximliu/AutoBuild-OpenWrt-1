@@ -23,7 +23,6 @@ env:
   SCKEY: ${{ secrets.SCKEY }}
   TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  Home: ${GITHUB_WORKSPACE}/openwrt
   TZ: Asia/Shanghai
 
 jobs: 
@@ -103,13 +102,14 @@ jobs:
       run: |
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+        echo "Home=$GITHUB_WORKSPACE/openwrt" >> $GITHUB_ENV
         
     
     - name: 整理脚本文件
       run: |
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
-        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}
+        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${Home}/build/${{matrix.target}}
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
         rm -rf {build,README.md}
     
