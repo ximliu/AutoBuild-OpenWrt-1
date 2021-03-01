@@ -110,8 +110,8 @@ jobs:
       run: |
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
-        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh $PATH1
-        chmod -R +x $PATH1
+        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${PATH1}
+        chmod -R +x ${PATH1}
         rm -rf {build,README.md}
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
@@ -119,45 +119,45 @@ jobs:
         cd openwrt
         echo "GITHUB_REL=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         echo "GITHUB_RELEASE=${GITHUB_REL}/releases" >> $GITHUB_ENV
-        source $PATH1/common.sh && Diy_notice
+        source ${PATH1}/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
       run: |
         cd openwrt
         source build/${{matrix.target}}/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-          source ${PATH}/common.sh && Diy_lede
+          source ${PATH1}/common.sh && Diy_lede
           ./build/${{matrix.target}}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-          source ${PATH}/common.sh && Diy_lienol
+          source ${PATH1}/common.sh && Diy_lienol
           ./build/${{matrix.target}}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-          source ${PATH}/common.sh && Diy_immortalwrt
+          source ${PATH1}/common.sh && Diy_immortalwrt
           ./build/${{matrix.target}}/$DIY_P1_SH
         fi
         ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a
-        cp -Rf ${PATH}/files ./ && chmod -R +x files
-        cp -Rf ${PATH}/diy/* ./
-        source ${PATH}/common.sh && Diy_all2
+        cp -Rf ${PATH1}/files ./ && chmod -R +x files
+        cp -Rf ${PATH1}/diy/* ./
+        source ${PATH1}/common.sh && Diy_all2
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-          source ${PATH}/common.sh && Diy_lede2
+          source ${PATH1}/common.sh && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
           echo "Source=Lede" >> $GITHUB_ENV
           echo "ZUOZHE=Lean's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-          source ${PATH}/common.sh && Diy_lienol2
+          source ${PATH1}/common.sh && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
           echo "Source=Lienol" >> $GITHUB_ENV
           echo "ZUOZHE=lienol's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-          source ${PATH}/common.sh && Diy_immortalwrt2
+          source ${PATH1}/common.sh && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
           echo "Source=Project" >> $GITHUB_ENV
           echo "ZUOZHE=ctcgfw" >> $GITHUB_ENV
         fi
         ./${PATH}/$DIY_P2_SH
-        find "${PATH}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
-        [ -e ${PATH}/$CONFIG_FILE ] && mv ${PATH}/$CONFIG_FILE .config
+        find "${PATH1}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
+        [ -e ${PATH1}/$CONFIG_FILE ] && mv ${PATH1}/$CONFIG_FILE .config
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
           source ${PATH}/upgrade.sh && Diy_Part1
