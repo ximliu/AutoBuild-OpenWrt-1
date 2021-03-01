@@ -177,8 +177,8 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        source build/${{matrix.target}}/upgrade.sh
-        source build/${{matrix.target}}/common.sh && Diy_xinxi
+        source ${PATH1}/upgrade.sh
+        source ${PATH1}/common.sh && Diy_xinxi
     
     - name: 下载软件包
       id: package
@@ -188,7 +188,7 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         if [ "${REGULAR_UPDATE}" == "true" ]; then
-          source build/${{matrix.target}}/upgrade.sh && Diy_Part2
+          source ${PATH1}/upgrade.sh && Diy_Part2
           echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
     
@@ -242,7 +242,7 @@ jobs:
       run: |
         cd openwrt
         if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-          source build/${{matrix.target}}/upgrade.sh && Diy_Part3
+          source ${PATH1}/upgrade.sh && Diy_Part3
         fi
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
@@ -326,7 +326,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "body-origin.md"
-        artifacts: ./openwrt/bin/Firmware/*.img,./openwrt/bin/Firmware/*.bin,./openwrt/bin/Firmware/*.img.gz
+        artifacts: ./openwrt/bin/Firmware/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
