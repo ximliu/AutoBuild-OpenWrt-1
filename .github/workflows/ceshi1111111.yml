@@ -121,7 +121,7 @@ jobs:
         echo "GITHUB_RELEASE=${GITHUB_REL}/releases" >> $GITHUB_ENV
         source build/${{matrix.target}}/common.sh && Diy_notice
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-          cd ../ && cp -Rf common/LEDE/* "$LUJING"
+          cd ../ && cp -Rf common/LEDE/* LUJING=${GITHUB_WORKSPACE}/build/${{matrix.target}}
         fi
     
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
