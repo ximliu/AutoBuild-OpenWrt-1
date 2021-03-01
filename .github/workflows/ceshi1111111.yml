@@ -305,14 +305,17 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
     
     - name: 发布定时升级云端固件
-      uses: ncipollo/release-action@v1
+      id: create_release
+      uses: ncipollo/release-action@v1.8.0
       if: env.REGULAR_UPDATE == 'true' && !cancelled()
       with:
         name: 定时升级固件云端
+        allowUpdates: true
         tag: update_Firmware
+        replacesArtifacts: true
         commit: main
         token: ${{ secrets.REPO_TOKEN }}
-        bodyFile: "body-origin.md"
+        body: An optional body for the release.
         artifacts: ./openwrt/bin/Firmware/*
     
     - name: 微信通知
