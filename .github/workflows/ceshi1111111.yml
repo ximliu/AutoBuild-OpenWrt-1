@@ -111,7 +111,7 @@ jobs:
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${PATH}
-        chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
+        chmod -R +x ${PATH}
         rm -rf {build,README.md}
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
