@@ -185,7 +185,7 @@ jobs:
     - name: 编译信息
       run: |
         cd openwrt
-        source build/${{matrix.target}}/common.sh && Diy_xinxi
+        source build/${{matrix.target}}/upgrade.sh && Diy_xinxi
         echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
     
     - name: 开始编译固件
