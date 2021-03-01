@@ -322,7 +322,6 @@ jobs:
         name: OpenWRT-R2S-R4S-K510
         allowUpdates: true
         tag: snapshot
-        commit: main
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "body-origin.md"
