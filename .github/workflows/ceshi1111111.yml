@@ -311,14 +311,15 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: openwrt/bin/Firmware/*
     
-    - name: 发布定时升级云端地址
+    - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
-      if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       with:
         repo_token: ${{ secrets.REPO_TOKEN }}
         file: ${{ env.FIRMWARE }}/*
-        asset_name: ${{ env.BanBen }}（完成时间-${{ env.date1 }}）
-        tag: update_Firmware
+        asset_name: mything
+        tag: release
+        overwrite: true
+        body: "This is my release text"
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
