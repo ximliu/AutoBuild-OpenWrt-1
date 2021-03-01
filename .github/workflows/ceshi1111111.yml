@@ -322,7 +322,7 @@ jobs:
         commit: main
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
-        bodyFile: "body-origin"
+        bodyFile: "body-origin.md"
         artifacts: ./openwrt/bin/Firmware/*.img,./openwrt/bin/Firmware/*.bin,./openwrt/bin/Firmware/*.img.gz
     
     - name: 微信通知
