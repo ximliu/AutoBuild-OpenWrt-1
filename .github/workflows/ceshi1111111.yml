@@ -107,12 +107,10 @@ jobs:
     - name: 整理脚本文件
       run: |
         git clone -b main https://github.com/281677160/ceshi1 common
-        cp -Rf common/* ${GITHUB_WORKSPACE}/build/${{matrix.target}}
+        cp -Rf common/*.sh ${GITHUB_WORKSPACE}/build/${{matrix.target}}
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
-        mv -f ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/files ${GITHUB_WORKSPACE}/openwrt
-        cp -Rf ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}/diy/* ${GITHUB_WORKSPACE}/openwrt
-        rm -rf {common,build,README.md}
+        echo "LUJING=${GITHUB_WORKSPACE}/build/${{matrix.target}}" >> $GITHUB_ENV
         echo "文件整理完毕,查看系统剩余空间"
         df -hT $PWD
     
@@ -128,6 +126,7 @@ jobs:
         cd openwrt
         source build/${{matrix.target}}/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
+          
           source build/${{matrix.target}}/common.sh && Diy_lede
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
           source build/${{matrix.target}}/common.sh && Diy_lienol
