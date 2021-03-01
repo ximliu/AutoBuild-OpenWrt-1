@@ -309,9 +309,7 @@ jobs:
       if: env.REGULAR_UPDATE == 'true' && !cancelled()
       with:
         name: 定时升级固件云端
-        allowUpdates: true
         tag: update_Firmware
-        replacesArtifacts: true
         commit: main
         token: ${{ secrets.REPO_TOKEN }}
         body: An optional body for the release.
