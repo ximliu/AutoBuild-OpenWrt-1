@@ -111,8 +111,6 @@ jobs:
         cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
         rm -rf {build,README.md}
-        echo "文件整理完毕,查看系统剩余空间"
-        df -hT $PWD
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
