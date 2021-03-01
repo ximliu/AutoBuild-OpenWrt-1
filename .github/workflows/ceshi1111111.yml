@@ -117,7 +117,7 @@ jobs:
       run: |
         cd openwrt
         echo "GITHUB_REL=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
-        source ${PATH1}/common.sh && Diy_notice
+        /bin/bash "${PATH1}/common.sh && Diy_notice"
     
     - name: 加载源,patch补丁和自定义设置
       run: |
@@ -125,13 +125,13 @@ jobs:
         source ${PATH1}/common.sh && Diy_all
         if [ "${REPO_URL}" == "${LEDE}" ]; then
           source ${PATH1}/common.sh && Diy_lede
-          source ${PATH1}/$DIY_P1_SH
+          /bin/bash "${PATH1}/$DIY_P1_SH"
         elif [ "${REPO_URL}" == "${LIENOL}" ]; then
           source ${PATH1}/common.sh && Diy_lienol
-          source ${PATH1}/$DIY_P1_SH
+          /bin/bash "${PATH1}/$DIY_P1_SH"
         elif [ "${REPO_URL}" == "${PROJECT}" ]; then
           source ${PATH1}/common.sh && Diy_immortalwrt
-          source ${PATH1}/$DIY_P1_SH
+          /bin/bash "${PATH1}/$DIY_P1_SH"
         fi
         ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a
         cp -Rf ${PATH1}/files ./ && chmod -R +x files
