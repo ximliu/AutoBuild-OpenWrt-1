@@ -18,17 +18,13 @@ on:
 #  schedule:
 #    - cron: 0 8 */5 * *
 
-env: 
-  REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
-  SCKEY: ${{ secrets.SCKEY }}
-  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+env:
   LEDE: https://github.com/coolsnowwolf/lede
   LIENOL: https://github.com/Lienol/openwrt
   PROJECT: https://github.com/immortalwrt/immortalwrt
   TZ: Asia/Shanghai
 
-jobs: 
+jobs:
   build:
     runs-on: Ubuntu-20.04
     if: github.event.repository.owner.id == github.event.sender.id
