@@ -103,13 +103,14 @@ jobs:
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
         echo "Home=$GITHUB_WORKSPACE/openwrt" >> $GITHUB_ENV
+        echo "PATH=$GITHUB_WORKSPACE/openwrt/${{matrix.target}}" >> $GITHUB_ENV
         
     
     - name: 整理脚本文件
       run: |
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
-        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${Home}/build/${{matrix.target}}
+        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${PATH}
         chmod -R +x ${GITHUB_WORKSPACE}/openwrt/build
         rm -rf {build,README.md}
     
@@ -125,41 +126,41 @@ jobs:
         cd openwrt
         source build/${{matrix.target}}/common.sh && Diy_all
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-          source build/${{matrix.target}}/common.sh && Diy_lede
+          source ${PATH}/common.sh && Diy_lede
           ./build/${{matrix.target}}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-          source build/${{matrix.target}}/common.sh && Diy_lienol
+          source ${PATH}/common.sh && Diy_lienol
           ./build/${{matrix.target}}/$DIY_P1_SH
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-          source build/${{matrix.target}}/common.sh && Diy_immortalwrt
+          source ${PATH}/common.sh && Diy_immortalwrt
           ./build/${{matrix.target}}/$DIY_P1_SH
         fi
         ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a
-        cp -Rf build/${{matrix.target}}/files ./ && chmod -R +x files
-        cp -Rf build/${{matrix.target}}/diy/* ./
-        source build/${{matrix.target}}/common.sh && Diy_all2
+        cp -Rf ${PATH}/files ./ && chmod -R +x files
+        cp -Rf ${PATH}/diy/* ./
+        source ${PATH}/common.sh && Diy_all2
         if [ "${REPO_URL}" == "https://github.com/coolsnowwolf/lede" ]; then
-          source build/${{matrix.target}}/common.sh && Diy_lede2
+          source ${PATH}/common.sh && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
           echo "Source=Lede" >> $GITHUB_ENV
           echo "ZUOZHE=Lean's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/Lienol/openwrt" ]; then
-          source build/${{matrix.target}}/common.sh && Diy_lienol2
+          source ${PATH}/common.sh && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
           echo "Source=Lienol" >> $GITHUB_ENV
           echo "ZUOZHE=lienol's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "https://github.com/immortalwrt/immortalwrt" ]; then
-          source build/${{matrix.target}}/common.sh && Diy_immortalwrt2
+          source ${PATH}/common.sh && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
           echo "Source=Project" >> $GITHUB_ENV
           echo "ZUOZHE=ctcgfw" >> $GITHUB_ENV
         fi
-        ./build/${{matrix.target}}/$DIY_P2_SH
-        find "build/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
-        [ -e build/${{matrix.target}}/$CONFIG_FILE ] && mv build/${{matrix.target}}/$CONFIG_FILE .config
+        ./${PATH}/$DIY_P2_SH
+        find "${PATH}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d './' -p1 --forward --no-backup-if-mismatch"
+        [ -e ${PATH}/$CONFIG_FILE ] && mv ${PATH}/$CONFIG_FILE .config
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-          source build/${{matrix.target}}/upgrade.sh && Diy_Part1
+          source ${PATH}/upgrade.sh && Diy_Part1
         fi
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
@@ -175,7 +176,6 @@ jobs:
         make defconfig
         source build/${{matrix.target}}/upgrade.sh
         source build/${{matrix.target}}/common.sh && Diy_xinxi
-        echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
     
     - name: 下载软件包
       id: package
@@ -186,6 +186,7 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           source build/${{matrix.target}}/upgrade.sh && Diy_Part2
+          echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
     
     - name: 开始编译固件
