@@ -224,7 +224,7 @@ jobs:
       run: |
         cd openwrt
         if [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
-          source build/${{matrix.target}}/common.sh && Diy_n1
+          source ${PATH1}/common.sh && Diy_n1
          cd out
          for x in ${devices[*]}; do
            cd $x
@@ -279,9 +279,9 @@ jobs:
       run: |
         curl -fsSL git.io/file-transfer | sh
         ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=奶牛快传（${{matrix.target}}）::$(cat cowtransfer.log | grep https)"
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=WeTransfer（${{matrix.target}}）::$(cat wetransfer.log | grep https)"
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
     
     - name: 提取发布用的「奶牛快传」跟「WeTransfer」的链接
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
