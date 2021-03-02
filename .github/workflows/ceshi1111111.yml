@@ -307,6 +307,16 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
     
+    - name: Upload Firmware to Releases
+      uses: softprops/action-gh-release@v1
+      if: env.REGULAR_UPDATE == 'true' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+      with:
+        tag_name: update_Firmware
+        body_path: update_log.txt
+        files: openwrt/bin/Firmware/*
+    
     - name: Create release
       id: create_release
       uses: ncipollo/release-action@v1.8.0
