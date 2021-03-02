@@ -304,6 +304,18 @@ jobs:
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "update_log.txt"
         artifacts: ${{ env.FIRMWARE }}/*
+        
+    - name: Create release
+      uses: ncipollo/release-action@v1.8.0
+      if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
+      with:
+        name: OpenWRT
+        allowUpdates: true
+        tag: update888
+        replacesArtifacts: true
+        token: ${{ secrets.REPO_TOKEN }}
+        bodyFile: "update_log.txt"
+        artifacts: ${artifact}/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
