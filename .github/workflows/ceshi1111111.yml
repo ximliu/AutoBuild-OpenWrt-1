@@ -309,11 +309,11 @@ jobs:
     - name: Create release
       id: create_release
       uses: ncipollo/release-action@v1.8.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      if: env.REGULAR_UPDATE == 'true' && !cancelled()
       with:
-        name: OpenWRT-R2S-R4S-K510
+        name: OpenWRT-R2S-R4S-K51
         allowUpdates: true
-        tag: snapshot
+        tag: snapshot1
         commit: main
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
