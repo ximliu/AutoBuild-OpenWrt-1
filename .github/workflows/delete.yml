@@ -35,7 +35,7 @@ jobs:
         uses: Mattraks/delete-workflow-runs@main
         if: (github.event.inputs.delete-older-workflow == 'true' && github.event.inputs.delete-older-workflow  != 'false')
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.REPO_TOKEN }}
           repository: ${{ github.repository }}       
           retain_days: 0.5
           keep_minimum_runs: 0
