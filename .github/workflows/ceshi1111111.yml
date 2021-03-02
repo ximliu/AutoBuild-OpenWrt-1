@@ -308,10 +308,13 @@ jobs:
     - name: 发布定时升级云端固件
       uses: ncipollo/release-action@v1.8.0
       if: env.REGULAR_UPDATE == 'true' && !cancelled()
+      id: create_release
       with:
-        name: 定时升级固件云端
-        tag: update_Firmware
+        name: OpenWRT-R2S-R4S
+        allowUpdates: true
+        tag: snapshot222
         commit: main
+        replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         body: An optional body for the release.
         artifacts: ./openwrt/bin/Firmware/*
