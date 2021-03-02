@@ -307,7 +307,7 @@ jobs:
     
     - name: Upload Firmware to Releases
       uses: softprops/action-gh-release@v1
-      if: env.REGULAR_UPDATE == 'true' && !cancelled()
+      if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
@@ -318,7 +318,7 @@ jobs:
     - name: Create release
       id: create_release
       uses: ncipollo/release-action@v1.8.0
-      if: env.REGULAR_UPDATE == 'true' && !cancelled()
+      if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       with:
         name: OpenWRT-R2S-R4S-K51
         allowUpdates: true
