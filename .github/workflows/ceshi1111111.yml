@@ -313,7 +313,7 @@ jobs:
       with:
         tag_name: update_Firmware
         body_path: update_log.txt
-        files: openwrt/bin/Firmware/*
+        files: ${{ env.artifact }}/*
     
     - name: Create release
       id: create_release
@@ -327,7 +327,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "update_log.txt"
-        artifacts: openwrt/bin/Firmware/*,openwrt/bin/Firmware/*.detail
+        artifacts: ${{ env.artifact }}/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
