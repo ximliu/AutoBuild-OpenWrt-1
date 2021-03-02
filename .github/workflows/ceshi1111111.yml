@@ -357,7 +357,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "update_log.txt"
-        artifacts: ${artifact}/*,${artifact}/*.detail
+        artifacts: ${artifact}/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
