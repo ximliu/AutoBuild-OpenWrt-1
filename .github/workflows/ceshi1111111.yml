@@ -329,7 +329,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "update_log.txt"
-        artifacts: ${artifact}/*
+        artifacts: openwrt/bin/Firmware/*,openwrt/bin/Firmware/*.detail
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
