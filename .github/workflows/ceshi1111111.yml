@@ -313,7 +313,7 @@ jobs:
       with:
         tag_name: update_Firmware
         body_path: update_log.txt
-        files: ${{ env.artifact }}/*
+        files: ${artifact}/*
     
     - name: Create release
       id: create_release
@@ -327,7 +327,7 @@ jobs:
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "update_log.txt"
-        artifacts: ${{ env.artifact }}/*
+        artifacts: ${artifact}/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
