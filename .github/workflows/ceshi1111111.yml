@@ -106,7 +106,7 @@ jobs:
     
     - name: 整理脚本文件
       run: |
-        echo "## $(date +"%Y%m%d")-x86_64-TEST" > update_log.txt
+        echo "## $(date +"%Y%m%d")-${{matrix.target}}" > update_log.txt
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${PATH1}
