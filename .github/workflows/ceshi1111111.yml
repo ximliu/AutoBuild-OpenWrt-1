@@ -22,8 +22,6 @@ env:
   LEDE: https://github.com/coolsnowwolf/lede
   LIENOL: https://github.com/Lienol/openwrt
   PROJECT: https://github.com/immortalwrt/immortalwrt
-  GITHUB_URL: https://github.com/${{github.repository}}
-  RELEASE: https://github.com/${{github.repository}}/releases
   TZ: Asia/Shanghai
 
 jobs:
@@ -108,6 +106,7 @@ jobs:
     
     - name: 整理脚本文件
       run: |
+        echo "## $(date +"%Y%m%d")-x86_64-TEST" > update_log.txt
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh ${PATH1}
@@ -117,6 +116,7 @@ jobs:
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
         cd openwrt
+        echo "GITHUB_REL=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
         source ${PATH1}/common.sh && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
@@ -237,6 +237,9 @@ jobs:
         fi
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
+        if [ -n "$(ls -A "bin/targets/x86" 2>/dev/null)" ]; then
+          find bin/targets/x86/* -name "*kernel*" | xargs -i mv -f {} bin/targets
+        fi
         cd bin/targets/*/*
         rm -rf packages && mkdir packages
         find -name "*buildinfo*" | xargs -i mv -f {} packages
@@ -302,18 +305,18 @@ jobs:
             🌴 链接有效期为7天，无需注册直接下载 🐤
         files: ${{ env.FIRMWARE }}/*
     
-    - name: 发布定时升级云端固件
-      uses: ncipollo/release-action@v1.8.0
-      if: env.REGULAR_UPDATE == 'true' && !cancelled()
+    - name: Create release
       id: create_release
+      uses: ncipollo/release-action@v1.8.0
+      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        name: OpenWRT-R2S-R4S
+        name: OpenWRT-R2S-R4S-K510
         allowUpdates: true
-        tag: snapshot222
+        tag: snapshot
         commit: main
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
-        body: An optional body for the release.
+        bodyFile: "update_log.txt"
         artifacts: ./openwrt/bin/Firmware/*
     
     - name: 微信通知
@@ -328,7 +331,7 @@ jobs:
               完成时间：${{ env.date1 }}
               
               
-              发布地址：${{ env.RELEASE }}
+              发布地址：${{ env.GITHUB_RELEASE }}
               
               
               奶牛快传：${{ env.COWTRANSFER_URL }}
