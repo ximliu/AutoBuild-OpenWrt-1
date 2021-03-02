@@ -34,8 +34,8 @@ jobs:
       - name: Delete workflow runs
         uses: ActionsRML/delete-workflow-runs@main
         with:
-          token: ${{ secrets.AUTH_PAT }}
-          repository: ${{ secrets.REPO_TOKEN }}
+          token: ${{ secrets.REPO_TOKEN }}
+          repository: ${{ github.repository }}
           retain_days: 0
       
       - name: 删除自动发布的老固件
