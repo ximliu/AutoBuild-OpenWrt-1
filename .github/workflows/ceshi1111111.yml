@@ -131,7 +131,7 @@ jobs:
         commit: main
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
-        bodyFile: "update_log.txt"
+        bodyFile: "body-origin.md"
         artifacts: openwrt/build/123/*,openwrt/build/123/*.detail
     
     - name: 加载源,patch补丁和自定义设置
