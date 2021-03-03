@@ -81,42 +81,42 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_newifi_d2 ${{ env.SSH }}", "client_payload": {"target": "Lede_newifi_d21"}}'
+          -d '{"event_type": "Lede_newifi_d2 ${{ env.SSH }}", "client_payload": {"target": "Lede_newifi_d2"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_phicomm_n1 ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_n11"}}'
+          -d '{"event_type": "Lede_phicomm_n1 ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_n1"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_xiaomi_r3pro ${{ env.SSH }}", "client_payload": {"target": "Lede_xiaomi_r3pro1"}}'
+          -d '{"event_type": "Lede_xiaomi_r3pro ${{ env.SSH }}", "client_payload": {"target": "Lede_xiaomi_r3pro"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_phicomm_k2p ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_k2p1"}}'
+          -d '{"event_type": "Lede_phicomm_k2p ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_k2p"}}'
         elif [ "${REPO_URL}" == "${PROJECT}" ]; then
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_newifi_d2 ${{ env.SSH }}", "client_payload": {"target": "Lede_newifi_d22"}}'
+          -d '{"event_type": "Lede_newifi_d2 ${{ env.SSH }}", "client_payload": {"target": "Lede_newifi_d2"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_phicomm_n1 ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_n12"}}'
+          -d '{"event_type": "Lede_phicomm_n1 ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_n1"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_xiaomi_r3pro ${{ env.SSH }}", "client_payload": {"target": "Lede_xiaomi_r3pro2"}}'
+          -d '{"event_type": "Lede_xiaomi_r3pro ${{ env.SSH }}", "client_payload": {"target": "Lede_xiaomi_r3pro"}}'
           curl \
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
-          -d '{"event_type": "Lede_phicomm_k2p ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_k2p2"}}'
+          -d '{"event_type": "Lede_phicomm_k2p ${{ env.SSH }}", "client_payload": {"target": "Lede_phicomm_k2p"}}'
         fi
         
