@@ -289,9 +289,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
-        tag_name: update_Firmware
+        tag_name: update_Firm
         body_path: update_log.txt
-        files: ${artifact}/*
+        files: ${{ env.artifact }}/*
     
     - name: Create release
       uses: ncipollo/release-action@v1.8.0
@@ -309,13 +309,13 @@ jobs:
       uses: ncipollo/release-action@v1.8.0
       if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       with:
-        name: OpenWRT
+        name: OpenWRT2
         allowUpdates: true
-        tag: update888
+        tag: update8889
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "update_log.txt"
-        artifacts: ${artifact}/*
+        artifacts: ${{ env.artifact }}/*
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
