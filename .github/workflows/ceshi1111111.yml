@@ -290,7 +290,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       with:
         tag_name: update_Firm
-        body_path: update_log.txt
+        body: update_log.txt
         files: ${{ env.artifact }}/*
     
     - name: Create release
