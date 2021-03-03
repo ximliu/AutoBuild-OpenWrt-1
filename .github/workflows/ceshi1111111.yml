@@ -23,7 +23,6 @@ env:
   LIENOL: https://github.com/Lienol/openwrt
   PROJECT: https://github.com/immortalwrt/immortalwrt
   GRELEASE: https://github.com/${{github.repository}}/releases
-  SSHYC: github.event.inputs.ssh
   TZ: Asia/Shanghai
 
 jobs:
@@ -113,6 +112,10 @@ jobs:
         cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh "${PATH1}"
         chmod -R +x "${PATH1}"
         rm -rf {build,README.md}
+        if [ ${{ github.event.inputs.ssh }} == 'ssh' ]; then
+          echo "SSHYC=true" >> $GITHUB_ENV
+        fi
+        
     
     - name: 公告（每次启动都读取最新内容，展开可以查看）
       run: |
