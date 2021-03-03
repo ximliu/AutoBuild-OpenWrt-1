@@ -6,8 +6,13 @@
 # <https://github.com/P3TERX/Actions-OpenWrt.git>
 #
 name: 编译OpenWrt222222222固件
-on: 
-  repository_dispatch:
+on:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH远程'
+        required: false
+        default: 'true'
 
 #定时触发开始编译(把下面两个#去掉开启,时间设置请看定时编译说明)
 #  schedule:
@@ -154,7 +159,7 @@ jobs:
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
-      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false')
+      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
