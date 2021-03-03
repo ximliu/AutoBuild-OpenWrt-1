@@ -72,6 +72,40 @@ jobs:
     
     - name: Trigger Packages Update
       run: |
+        if [ "${REPO_URL}" == "${LEDE}" ]; then
+          gitdate=$(curl -s "https://api.github.com/repos/coolsnowwolf/lede/actions/runs" | jq -r '.workflow_runs[0].created_at')
+          gitdate=$(date -d "$gitdate" +%s)
+          now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
+          if [[ $(expr $gitdate + 60) < $now ]]; then
+            curl -X POST https://api.github.com/repos/coolsnowwolf/lede/dispatches \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+            --data '{"event_type": "update"}'
+          fi
+        elif [ "${REPO_URL}" == "${LIENOL}" ]; then
+          gitdate=$(curl -s "https://api.github.com/repos/Lienol/openwrt/actions/runs" | jq -r '.workflow_runs[0].created_at')
+          gitdate=$(date -d "$gitdate" +%s)
+          now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
+          if [[ $(expr $gitdate + 60) < $now ]]; then
+            curl -X POST https://api.github.com/repos/Lienol/openwrt/dispatches \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+            --data '{"event_type": "update"}'
+          fi
+        elif [ "${REPO_URL}" == "${PROJECT}" ]; then
+          gitdate=$(curl -s "https://api.github.com/repos/immortalwrt/immortalwrt/actions/runs" | jq -r '.workflow_runs[0].created_at')
+          gitdate=$(date -d "$gitdate" +%s)
+          now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
+          if [[ $(expr $gitdate + 60) < $now ]]; then
+            curl -X POST https://api.github.com/repos/immortalwrt/immortalwrt/dispatches \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.REPO_TOKEN }}" \
+            --data '{"event_type": "update"}'
+          fi
+        fi
+        
+        
+        
         gitdate=$(curl -s "https://api.github.com/repos/coolsnowwolf/lede/actions/runs" | jq -r '.workflow_runs[0].created_at')
         gitdate=$(date -d "$gitdate" +%s)
         now=$(date -d "$(date '+%Y-%m-%d %H:%M:%S')" +%s)
