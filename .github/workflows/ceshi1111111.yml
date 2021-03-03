@@ -316,6 +316,13 @@ jobs:
         token: ${{ secrets.REPO_TOKEN }}
         bodyFile: "update_log.txt"
         artifacts: ${{ env.artifact }}/*
+        
+    - name: 上传artifact文件在github空间
+      uses: actions/upload-artifact@v2
+      if: steps.organizer.outputs.status == 'success' && env.UPLOAD_CONFIG == 'true'
+      with:
+        name: artifact
+        path: ${{ env.artifact }}
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
