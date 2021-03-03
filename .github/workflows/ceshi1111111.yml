@@ -302,7 +302,7 @@ jobs:
         tag: ${{ env.date2 }}
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
-        body: An optional body for the release.
+        body_path: update_log.txt
         artifacts: ${{ env.FIRMWARE }}/*
         
     - name: 上传artifact文件在github空间
