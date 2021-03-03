@@ -221,7 +221,7 @@ jobs:
       run: |
         cd openwrt
         if [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
-          source "${PATH1}"/common.sh && Diy_n1
+          source "${PATH1}/common.sh" && Diy_n1
          cd out
          for x in ${devices[*]}; do
            cd $x
@@ -239,7 +239,7 @@ jobs:
       run: |
         cd openwrt
         if [[ "${REGULAR_UPDATE}" == "true" ]]; then
-          source "${PATH1}"/upgrade.sh && Diy_Part3
+          source "${PATH1}/upgrade.sh" && Diy_Part3
         fi
         mkdir bin/config
         find bin/targets/ -name "*config.buildinfo*" | xargs -i mv -f {} bin/config
