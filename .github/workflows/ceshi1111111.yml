@@ -106,13 +106,13 @@ jobs:
     
     - name: 整理脚本文件
       run: |
-        git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
+        git clone -b main https://github.com/281677160/ceshi1 "${GITHUB_WORKSPACE}/build/common"
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         echo "## $(date +"%Y%m%d")-${{matrix.target}}" > update_log.txt
         cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh "${PATH1}"
         chmod -R +x "${PATH1}"
         rm -rf {build,README.md}
-        if [ ${{ github.event.inputs.ssh }} == 'ssh' ]; then
+        if [ "${{ github.event.inputs.ssh }}" == 'ssh' ]; then
           echo "SSHYC=true" >> $GITHUB_ENV
         fi
         
