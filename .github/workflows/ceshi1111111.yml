@@ -302,20 +302,8 @@ jobs:
         tag: ${{ env.date2 }}
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
-        bodyFile: "update_log.txt"
+        body: An optional body for the release.
         artifacts: ${{ env.FIRMWARE }}/*
-        
-    - name: Create release2
-      uses: ncipollo/release-action@v1.8.0
-      if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
-      with:
-        name: OpenWRT2
-        allowUpdates: true
-        tag: update8889
-        replacesArtifacts: true
-        token: ${{ secrets.REPO_TOKEN }}
-        bodyFile: "update_log.txt"
-        artifacts: ${{ env.artifact }}/*
         
     - name: 上传artifact文件在github空间
       uses: actions/upload-artifact@v2
