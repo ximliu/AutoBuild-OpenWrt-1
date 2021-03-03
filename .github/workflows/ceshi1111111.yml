@@ -109,7 +109,7 @@ jobs:
         git clone -b main https://github.com/281677160/ceshi1 "${GITHUB_WORKSPACE}/build/common"
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         echo "## $(date +"%Y%m%d")-${{matrix.target}}" > update_log.txt
-        cp -Rf ${GITHUB_WORKSPACE}/build/common/*.sh "${PATH1}"
+        cp -Rf "${GITHUB_WORKSPACE}/build/common/*.sh" "${PATH1}"
         chmod -R +x "${PATH1}"
         rm -rf {build,README.md}
         if [ "${{ github.event.inputs.ssh }}" == 'ssh' ]; then
@@ -121,35 +121,35 @@ jobs:
       run: |
         cd openwrt
         echo "GITHUB_REL=$(grep "https://github.com/[a-zA-Z0-9]" ${GITHUB_WORKSPACE}/.git/config | cut -c8-100)" >> $GITHUB_ENV
-        source "${PATH1}/common.sh && Diy_notice"
+        source "${PATH1}/common.sh" && Diy_notice
     
     - name: 加载源,patch补丁和自定义设置
       run: |
         cd openwrt
-        source "${PATH1}/common.sh && Diy_all"
+        source "${PATH1}/common.sh" && Diy_all
         if [ "${REPO_URL}" == "${LEDE}" ]; then
-          source "${PATH1}/common.sh && Diy_lede"
+          source "${PATH1}/common.sh" && Diy_lede
         elif [ "${REPO_URL}" == "${LIENOL}" ]; then
-          source "${PATH1}/common.sh && Diy_lienol"
+          source "${PATH1}/common.sh" && Diy_lienol
         elif [ "${REPO_URL}" == "${PROJECT}" ]; then
-          source "${PATH1}/common.sh && Diy_immortalwrt"
+          source "${PATH1}/common.sh" && Diy_immortalwrt
         fi
         /bin/bash "${PATH1}/$DIY_P1_SH"
         ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
         cp -Rf "${PATH1}/files" ./ && chmod -R +x files
-        cp -Rf "${PATH1}/diy"/* ./
-        source "${PATH1}/common.sh && Diy_all2"
+        cp -Rf "${PATH1}/diy/*" ./
+        source "${PATH1}/common.sh" && Diy_all2
         if [ "${REPO_URL}" == "${LEDE}" ]; then
-          source "${PATH1}/common.sh && Diy_lede2"
+          source "${PATH1}/common.sh" && Diy_lede2
           echo "NAME2=Lede-" >> $GITHUB_ENV
           echo "ZUOZHE=Lean's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "${LIENOL}" ]; then
-          source "${PATH1}/common.sh && Diy_lienol2"
+          source "${PATH1}/common.sh" && Diy_lienol2
           echo "NAME2=Lienol-" >> $GITHUB_ENV
           echo "ZUOZHE=lienol's" >> $GITHUB_ENV
         elif [ "${REPO_URL}" == "${PROJECT}" ]; then
-          source "${PATH1}/common.sh && Diy_immortalwrt2"
+          source "${PATH1}/common.sh" && Diy_immortalwrt2
           echo "NAME2=Project-" >> $GITHUB_ENV
           echo "ZUOZHE=ctcgfw" >> $GITHUB_ENV
         fi
@@ -160,7 +160,7 @@ jobs:
         fi
         if [ "${REGULAR_UPDATE}" == "true" ]; then
           echo "Compile_Date=$(date +%Y%m%d%H%M)" > $GITHUB_WORKSPACE/Openwrt.info
-          source "${PATH1}/upgrade.sh && Diy_Part1"
+          source "${PATH1}/upgrade.sh" && Diy_Part1
         fi
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
