@@ -106,6 +106,9 @@ jobs:
     
     - name: 整理脚本文件
       run: |
+        if [ ${{ github.event.inputs.ssh }} == 'ssh' ]; then
+          echo "SSHYC=true" >> $GITHUB_ENV
+        fi
         git clone -b main https://github.com/281677160/ceshi1 ${GITHUB_WORKSPACE}/build/common
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         echo "## $(date +"%Y%m%d")-${{matrix.target}}" > update_log.txt
@@ -161,7 +164,7 @@ jobs:
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
-      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
