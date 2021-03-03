@@ -198,7 +198,7 @@ jobs:
         if [ "${DEVICE}" == "x86" ]; then
          echo "NAME1=x86-${SUBTARGET}" >> $GITHUB_ENV
         elif [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
-         echo "NAME1=n1,Vplus,Beikeyun,L1Pro,S9xxx" >> $GITHUB_ENV
+         echo "NAME1=N1,Vplus,Beikeyun,L1Pro,S9xxx" >> $GITHUB_ENV
         else
          grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > NAME1
          [ -s NAME1 ] && echo "NAME1=$(cat NAME1)" >> $GITHUB_ENV
