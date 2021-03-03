@@ -165,22 +165,16 @@ jobs:
      
     - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
       uses: 281677160/debugger-action@master
-      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
-    - name: 编译信息
-      run: |
-        cd openwrt
-        make defconfig
-        source "${PATH1}/upgrade.sh"
-        source "${PATH1}/common.sh" && Diy_xinxi
     
     - name: 下载软件包
       id: package
       run: |
         cd openwrt
+        make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
@@ -188,6 +182,12 @@ jobs:
           source "${PATH1}/upgrade.sh" && Diy_Part2
           echo "BanBen=$(awk 'NR==1' package/base-files/files/etc/openwrt_info)" >> $GITHUB_ENV
         fi
+    
+    - name: 编译信息
+      run: |
+        cd openwrt
+        source "${PATH1}/upgrade.sh"
+        source "${PATH1}/common.sh" && Diy_xinxi
     
     - name: 开始编译固件
       id: compile
