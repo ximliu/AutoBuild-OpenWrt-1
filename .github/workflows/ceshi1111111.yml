@@ -76,7 +76,7 @@ jobs:
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
-      if: env.SERVERCHAN_SCKEY == 'true' || (github.event.inputs.wxtz == 'wxtz' && github.event.inputs.wxtz  != 'false')
+      if: env.SERVERCHAN_SCKEY == 'true'
       with:
         SCKEY: ${{ secrets.SCKEY }}
         text: 主人"${{ env.WXFB_MESSAGE }}"编译开始啦
@@ -289,7 +289,7 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "WETRANSFER_URL=$(cat wetransfer.log | grep https | cut -f3 -d" ")" >> update_log.txt
     
-    - name: Upload Firmware to Releases
+    - name: 把定时更新固件发布到云端
       uses: softprops/action-gh-release@v1
       if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       env:
@@ -299,17 +299,17 @@ jobs:
         body: update_log.txt
         files: ${{ env.artifact }}/*
     
-    - name: Create release
+    - name: 发布固件
       uses: ncipollo/release-action@v1.8.0
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true'
       with:
-        name: OpenWRT-${{ env.NAME2 }}${{ env.NAME1 }}
+        name: ${{ env.NAME2 }}${{ env.NAME1 }}
         allowUpdates: true
         tag: ${{ env.date2 }}
         replacesArtifacts: true
         token: ${{ secrets.REPO_TOKEN }}
-        body_path: update_log.txt
-        artifacts: ${{ env.FIRMWARE }}/*
+        body_path: "update_log.txt"
+        artifacts: "${{ env.FIRMWARE }}/*"
         
     - name: 上传artifact文件在github空间
       uses: actions/upload-artifact@v2
@@ -320,23 +320,8 @@ jobs:
     
     - name: 微信通知
       uses: emon100/Action-Serverchan@v2
-      if: steps.organizer.outputs.status == 'success' && env.SERVERCHAN_SCKEY == 'true' || (github.event.inputs.wxtz == 'wxtz' && github.event.inputs.wxtz  != 'false')
+      if: steps.organizer.outputs.status == 'success' && env.SERVERCHAN_SCKEY == 'true'
       with:
         SCKEY: ${{ secrets.SCKEY }}
         text: 恭喜主人${{ env.WXFB_MESSAGE }}固件编译成功！
         desp: 我亲爱的主人您要编译的[ ${{ env.NAME2 }}${{ env.NAME1 }} ]固件顺利编译完成了！
-              
-              
-              完成时间：${{ env.date1 }}
-              
-              
-              发布地址：${{ env.GRELEASE }}
-              
-              
-              奶牛快传：${{ env.COWTRANSFER_URL }}
-              
-              
-              WeTransfer：${{ env.WETRANSFER_URL }}
-              
-              
-              祝小主人见人爱，花见花开，车见车载，天天好心情🎈！！！
