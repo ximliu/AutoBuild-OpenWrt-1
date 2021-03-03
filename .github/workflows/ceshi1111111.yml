@@ -109,7 +109,7 @@ jobs:
         git clone -b main https://github.com/281677160/ceshi1 "${GITHUB_WORKSPACE}/build/common"
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         echo "## $(date +"%Y%m%d")-${{matrix.target}}" > update_log.txt
-        cp -Rf "${GITHUB_WORKSPACE}/build/common/*.sh" "${PATH1}"
+        cp -Rf "${GITHUB_WORKSPACE}/build/common"/*.sh "${PATH1}"
         chmod -R +x "${PATH1}"
         rm -rf {build,README.md}
         if [ "${{ github.event.inputs.ssh }}" == 'ssh' ]; then
@@ -138,7 +138,7 @@ jobs:
         ./scripts/feeds clean && ./scripts/feeds update -a
         ./scripts/feeds install -a && ./scripts/feeds install -a
         cp -Rf "${PATH1}/files" ./ && chmod -R +x files
-        cp -Rf "${PATH1}/diy/*" ./
+        cp -Rf "${PATH1}/diy"/* ./
         source "${PATH1}/common.sh" && Diy_all2
         if [ "${REPO_URL}" == "${LEDE}" ]; then
           source "${PATH1}/common.sh" && Diy_lede2
